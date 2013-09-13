@@ -7,8 +7,9 @@
 (eval-when-compile (require 'cl))
 (require 'helm)
 
-(defvar ypv-yp-urls '((sp  "bayonet.ddo.jp/sp")
-                      (tp  "temp.orz.hm/yp"))
+(defvar ypv-yp-urls
+  '((sp  "bayonet.ddo.jp/sp")
+    (tp  "temp.orz.hm/yp"))
   "Yellow Pages urls")
 
 (defvar ypv-local-address
@@ -62,8 +63,7 @@
    :addr (nth 3 info)
    :url (nth 4 info)
    :genre (nth 5 info)
-   :desc (nth 6 info)
-   ))
+   :desc (nth 6 info)))
 
 
 (defun ypv--get/parse-channels (yp-infos)
@@ -75,8 +75,8 @@
   (let* ((info (split-string candidate " | "))
          (url (format "http://%s/pls/%s?tip=%s"
                       ypv-local-address
-                      (nth 2 info)
-                      (nth 3 info) ; id
+                      (nth 2 info) ; id
+                      (nth 3 info) ; addr
                       ))
          (player "mplayer")
          (command-args
