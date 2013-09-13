@@ -89,7 +89,7 @@
            url
            "-cache" "4000")))
     (message url)
-    (apply 'start-process command-args)))
+    (apply #'start-process command-args)))
 
 (defun ypv-create-candidates ()
   (cl-mapcar
