@@ -79,15 +79,17 @@
                       (nth 3 info) ; addr
                       ))
          (player "mplayer")
+         (bufname "ypv")
          (command-args
           (list
+           bufname
+           nil
            player
-           nil nil nil
            "-playlist"
            url
            "-cache" "4000")))
     (message url)
-    (apply 'call-process command-args)))
+    (apply 'start-process command-args)))
 
 (defun ypv-create-candidates ()
   (cl-mapcar
