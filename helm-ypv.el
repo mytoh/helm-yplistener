@@ -9,7 +9,8 @@
 
 (defvar ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
-    (tp  "temp.orz.hm/yp"))
+    (tp  "temp.orz.hm/yp")
+    (dp  "dp.prgrssv.net"))
   "Yellow Pages urls")
 
 (defvar ypv-local-address
@@ -60,7 +61,7 @@
    :yp (symbol-name (nth 0 info))
    :name (nth 1 info)
    :id (nth 2 info)
-   :addr (nth 3 info)
+   :ip (nth 3 info)
    :url (nth 4 info)
    :genre (nth 5 info)
    :desc (nth 6 info)))
@@ -72,11 +73,11 @@
    (ypv--get-channels yp-infos)))
 
 (defun ypv-action-open-url (candidate)
-  (let* ((info (split-string candidate " | "))
+  (let* ((info candidate)
          (url (format "http://%s/pls/%s?tip=%s"
                       ypv-local-address
-                      (nth 2 info) ; id
-                      (nth 3 info) ; addr
+                      (plist-get info :id) ; id
+                      (plist-get info :ip) ; addr
                       ))
          (player "mplayer")
          (bufname "ypv")
@@ -87,19 +88,25 @@
            player
            "-playlist"
            url
-           "-cache" "4000")))
-    (message url)
+           "-framedrop"
+           "-nocache" )))
     (apply #'start-process command-args)))
 
 (defun ypv-create-candidates ()
   (cl-mapcar
    #'(lambda (info)
-       (format "%s | %s | %s | %s"
-               (plist-get info :name)
-               (plist-get info :desc)
-               (plist-get info :id)
-               (plist-get info :addr)))
+       (cons
+        ;; display
+        (ypv-create-display-candidate info)
+        ;; real
+        info))
    (ypv--get/parse-channels ypv-yp-urls)))
+
+(defun ypv-create-display-candidate (info)
+  (format "%s | %s | %s"
+          (propertize (plist-get info :name) 'face 'font-lock-type-face)
+          (plist-get info :desc)
+          (plist-get info :url)))
 
 (defun ypv-create-sources ()
   `((name . "channel list")
