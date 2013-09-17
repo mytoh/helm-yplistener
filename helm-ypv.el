@@ -21,8 +21,9 @@
   (concat "http://" info "/" "index.txt"))
 
 (defun ypv--url-retrieve (url)
-  (ypv--remove-http-header
-   (url-retrieve-synchronously url)))
+  (ypv--replace-html-entities
+   (ypv--remove-http-header
+    (url-retrieve-synchronously url))))
 
 (defun ypv--get-channels (yp-info)
   (cl-mapcar
@@ -66,6 +67,23 @@
    :genre (nth 5 info)
    :desc (nth 6 info)))
 
+(defun ypv--replace-html-entities (str)
+  (let ((ents '(("&lt;" "<")
+                ("&gt;" ">"))))
+    (ypv--replace-html-entites-internal
+     ents
+     str)))
+
+(defun ypv--replace-html-entites-internal (lst str)
+  (if (null lst)
+      str
+    (let* ((rep (car lst))
+           (rep-str (replace-regexp-in-string
+                     (car rep) (cadr rep)
+                     str)))
+      (ypv--replace-html-entites-internal
+       (cdr lst) rep-str))))
+
 
 (defun ypv--get/parse-channels (yp-infos)
   (cl-mapcan
@@ -78,19 +96,18 @@
                       ypv-local-address
                       (plist-get info :id) ; id
                       (plist-get info :ip) ; addr
-                      ))
-         (player "mplayer")
-         (bufname "ypv")
-         (command-args
-          (list
-           bufname
-           nil
-           player
-           "-playlist"
-           url
-           "-framedrop"
-           "-nocache" )))
-    (apply #'start-process command-args)))
+                      )))
+    (ypv-player-mplayer url)))
+
+
+(defun ypv-player-mplayer (url)
+  (let ((args
+         (list
+          "ypv"
+          nil
+          "mplayer" "-playlist" url
+          "-nocache" "-framedrop")))
+    (apply #'start-process args)))
 
 (defun ypv-create-candidates ()
   (cl-mapcar
@@ -103,7 +120,7 @@
    (ypv--get/parse-channels ypv-yp-urls)))
 
 (defun ypv-create-display-candidate (info)
-  (format "%s | %s | %s"
+  (format "%s %s %s"
           (propertize (plist-get info :name) 'face 'font-lock-type-face)
           (plist-get info :desc)
           (plist-get info :url)))
