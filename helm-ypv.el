@@ -29,7 +29,8 @@
   (cl-mapcar
    #'(lambda (info)
        `(,(car info)
-         ,(ypv--url-retrieve (ypv--make-yp-index-url (cadr info)))))
+         ,(ypv--url-retrieve
+           (ypv--make-yp-index-url (cadr info)))))
    yp-info))
 
 (defun ypv--remove-http-header (buf)
@@ -101,12 +102,13 @@
 
 
 (defun ypv-player-mplayer (url)
+  (message url)
   (let ((args
          (list
           "ypv"
           nil
           "mplayer" "-playlist" url
-          "-nocache" "-framedrop")))
+          "-nocache" "-framedrop" "-noconsolecontrols")))
     (apply #'start-process args)))
 
 (defun ypv-create-candidates ()
