@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 
 (defvar ypv-yp-urls
@@ -17,15 +17,15 @@
   "localhost:7155"
   "local PeerCast addr:port")
 
-(defun ypv--make-yp-index-url (info)
+(cl-defun ypv--make-yp-index-url (info)
   (concat "http://" info "/" "index.txt"))
 
-(defun ypv--url-retrieve (url)
+(cl-defun ypv--url-retrieve (url)
   (ypv--replace-html-entities
    (ypv--remove-http-header
     (url-retrieve-synchronously url))))
 
-(defun ypv--get-channels (yp-info)
+(cl-defun ypv--get-channels (yp-info)
   (cl-mapcar
    #'(lambda (info)
        `(,(car info)
@@ -33,9 +33,9 @@
            (ypv--make-yp-index-url (cadr info)))))
    yp-info))
 
-(defun ypv--remove-http-header (buf)
+(cl-defun ypv--remove-http-header (buf)
   ;; remove header info [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
-  (let ((content nil))
+  (cl-letf ((content nil))
     (with-current-buffer buf
       (save-excursion
         (goto-char (point-min))
@@ -44,13 +44,13 @@
         (kill-buffer (current-buffer))))
     (ypv--string->utf-8 content)))
 
-(defun ypv--string->utf-8 (str)
+(cl-defun ypv--string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))
 
-(defun ypv--parse-channels (info)
-  (let* ((yp-name (car info))
-         (content (cadr info))
-         (channels (split-string content "\n")))
+(cl-defun ypv--parse-channels (info)
+  (cl-letf* ((yp-name (car info))
+             (content (cadr info))
+             (channels (split-string content "\n")))
     (cl-mapcar
      (lambda (x)
        (ypv--channel-info-to-plist
@@ -58,60 +58,60 @@
                 (split-string x "<>"))))
      channels)))
 
-(defun ypv--channel-info-to-plist (info)
+(cl-defun ypv--channel-info-to-plist (info)
   (list
-   :yp (symbol-name (nth 0 info))
-   :name (nth 1 info)
-   :id (nth 2 info)
-   :ip (nth 3 info)
-   :url (nth 4 info)
-   :genre (nth 5 info)
-   :desc (nth 6 info)))
+   :yp (symbol-name (cl-first info))
+   :name (cl-second info)
+   :id (cl-third info)
+   :ip (cl-fourth info)
+   :url (cl-fifth info)
+   :genre (cl-sixth info)
+   :desc (cl-seventh info)))
 
-(defun ypv--replace-html-entities (str)
-  (let ((ents '(("&lt;" "<")
-                ("&gt;" ">"))))
+(cl-defun ypv--replace-html-entities (str)
+  (cl-letf ((ents '(("&lt;" "<")
+                    ("&gt;" ">"))))
     (ypv--replace-html-entites-internal
      ents
      str)))
 
-(defun ypv--replace-html-entites-internal (lst str)
+(cl-defun ypv--replace-html-entites-internal (lst str)
   (if (null lst)
       str
-    (let* ((rep (car lst))
-           (rep-str (replace-regexp-in-string
-                     (car rep) (cadr rep)
-                     str)))
+    (cl-letf* ((rep (car lst))
+               (rep-str (replace-regexp-in-string
+                         (car rep) (cadr rep)
+                         str)))
       (ypv--replace-html-entites-internal
        (cdr lst) rep-str))))
 
 
-(defun ypv--get/parse-channels (yp-infos)
+(cl-defun ypv--get/parse-channels (yp-infos)
   (cl-mapcan
    #'ypv--parse-channels
    (ypv--get-channels yp-infos)))
 
-(defun ypv-action-open-url (candidate)
-  (let* ((info candidate)
-         (url (format "http://%s/pls/%s?tip=%s"
-                      ypv-local-address
-                      (plist-get info :id) ; id
-                      (plist-get info :ip) ; addr
-                      )))
+(cl-defun ypv-action-open-url (candidate)
+  (cl-letf* ((info candidate)
+             (url (format "http://%s/pls/%s?tip=%s"
+                          ypv-local-address
+                          (plist-get info :id) ; id
+                          (plist-get info :ip) ; addr
+                          )))
     (ypv-player-mplayer url)))
 
 
-(defun ypv-player-mplayer (url)
+(cl-defun ypv-player-mplayer (url)
   (message url)
-  (let ((args
-         (list
-          "ypv"
-          nil
-          "mplayer" "-playlist" url
-          "-nocache" "-framedrop" "-noconsolecontrols")))
+  (cl-letf ((args
+             (list
+              "ypv"
+              nil
+              "mplayer" "-playlist" url
+              "-nocache" "-framedrop" "-noconsolecontrols")))
     (apply #'start-process args)))
 
-(defun ypv-create-candidates ()
+(cl-defun ypv-create-candidates ()
   (cl-mapcar
    #'(lambda (info)
        (cons
@@ -121,20 +121,20 @@
         info))
    (ypv--get/parse-channels ypv-yp-urls)))
 
-(defun ypv-create-display-candidate (info)
+(cl-defun ypv-create-display-candidate (info)
   (format "%s %s %s"
           (propertize (plist-get info :name) 'face 'font-lock-type-face)
           (plist-get info :desc)
           (plist-get info :url)))
 
-(defun ypv-create-sources ()
+(cl-defun ypv-create-sources ()
   `((name . "channel list")
     (candidates . ,(ypv-create-candidates))
     (action . (("Open url" .  ypv-action-open-url)))))
 
 
 ;;;###autoload
-(defun helm-ypv ()
+(cl-defun helm-ypv ()
   "Helm command for yp."
   (interactive)
   (helm (ypv-create-sources)))
