@@ -52,10 +52,10 @@
              (content (cadr info))
              (channels (split-string content "\n")))
     (cl-mapcar
-     (lambda (x)
-       (ypv--channel-info-to-plist
-        (append (list yp-name)
-                (split-string x "<>"))))
+     #'(lambda (x)
+         (ypv--channel-info-to-plist
+          (append (list yp-name)
+                  (split-string x "<>"))))
      channels)))
 
 (cl-defun ypv--channel-info-to-plist (info)
@@ -96,20 +96,17 @@
              (url (format "http://%s/pls/%s?tip=%s"
                           ypv-local-address
                           (plist-get info :id) ; id
-                          (plist-get info :ip) ; addr
+                          (plist-get info :ip) ; ip
                           )))
     (ypv-player-mplayer url)))
 
-
-(cl-defun ypv-player-mplayer (url)
+(cl-defun ypv-player-mplayre (url)
   (message url)
-  (cl-letf ((args
-             (list
-              "ypv"
-              nil
-              "mplayer" "-playlist" url
-              "-nocache" "-framedrop" "-noconsolecontrols")))
-    (apply #'start-process args)))
+  (cl-letf ((command (concat "mplayer -playlist "
+                             url
+                             " -nocache -framedrop -noconsolecontrols")))
+    (start-process-shell-command "ypv" nil command)))
+
 
 (cl-defun ypv-create-candidates ()
   (cl-mapcar
