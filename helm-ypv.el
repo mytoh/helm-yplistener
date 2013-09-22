@@ -104,7 +104,7 @@
   (message url)
   (cl-letf ((command (concat "mplayer -playlist "
                              url
-                             " -nocache -framedrop -noconsolecontrols")))
+                             "--softvol --nocache --framedrop --no-consolecontrols")))
     (start-process-shell-command "ypv" nil command)))
 
 
