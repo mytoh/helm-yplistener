@@ -100,7 +100,7 @@
                           )))
     (ypv-player-mplayer url)))
 
-(cl-defun ypv-player-mplayre (url)
+(cl-defun ypv-player-mplayer (url)
   (message url)
   (cl-letf ((command (concat "mplayer -playlist "
                              url
