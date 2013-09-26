@@ -102,9 +102,11 @@
 
 (cl-defun ypv-player-mplayer (url)
   (message url)
-  (cl-letf ((command (concat "mplayer -playlist "
-                             url
-                             "--softvol --nocache --framedrop --no-consolecontrols")))
+  (cl-letf ((command (concat "mplayer --playlist="
+                             "'" url "'"
+                             " --softvol --nocache --framedrop --no-consolecontrols"
+                             )))
+    (message command)
     (start-process-shell-command "ypv" nil command)))
 
 
