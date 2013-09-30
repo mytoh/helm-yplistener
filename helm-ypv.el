@@ -7,6 +7,7 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 
+
 (defvar ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
@@ -25,16 +26,18 @@
    (ypv--remove-http-header
     (url-retrieve-synchronously url))))
 
+(cl-defun ypv--get-channel (info)
+  (list (car info)
+        (ypv--url-retrieve
+         (ypv--make-yp-index-url (cadr info)))))
+
 (cl-defun ypv--get-channels (yp-info)
   (cl-mapcar
-   #'(lambda (info)
-       `(,(car info)
-         ,(ypv--url-retrieve
-           (ypv--make-yp-index-url (cadr info)))))
+   #'ypv--get-channel
    yp-info))
 
 (cl-defun ypv--remove-http-header (buf)
-  ;; remove header info [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
+  ;; remove header info, [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
   (cl-letf ((content nil))
     (with-current-buffer buf
       (save-excursion
@@ -95,9 +98,8 @@
   (cl-letf* ((info candidate)
              (url (format "http://%s/pls/%s?tip=%s"
                           ypv-local-address
-                          (plist-get info :id) ; id
-                          (plist-get info :ip) ; ip
-                          )))
+                          (plist-get info :id)
+                          (plist-get info :ip))))
     (ypv-player-mplayer url)))
 
 (cl-defun ypv-player-mplayer (url)
