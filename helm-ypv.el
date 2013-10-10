@@ -74,6 +74,22 @@
    :desc (cl-seventh info)
    :type (cl-nth-value 10 info)))
 
+(cl-defun ypv--channel-info-name (info)
+  (plist-get info :name))
+(cl-defun ypv--channel-info-id (info)
+  (plist-get info :id))
+(cl-defun ypv--channel-info-desc (info)
+  (plist-get info :desc))
+(cl-defun ypv--channel-info-url (info)
+  (plist-get info :url))
+(cl-defun ypv--channel-info-type (info)
+  (plist-get info :type))
+(cl-defun ypv--channel-info-ip (info)
+  (plist-get info :ip))
+(cl-defun ypv--channel-info-genre (info)
+  (plist-get info :genre))
+
+
 (cl-defun ypv--replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
                     ("&gt;" ">"))))
@@ -101,8 +117,8 @@
   (cl-letf* ((info candidate)
              (url (format "http://%s/pls/%s?tip=%s"
                           ypv-local-address
-                          (plist-get info :id)
-                          (plist-get info :ip))))
+                          (ypv--channel-info-id info)
+                          (ypv--channel-info-ip info))))
     (ypv-player-mplayer url)))
 
 (cl-defun ypv-player-mplayer (url)
@@ -127,10 +143,10 @@
 
 (cl-defun ypv-create-display-candidate (info)
   (format "%s %s %s %s"
-          (propertize (plist-get info :name) 'face 'font-lock-type-face)
-          (plist-get info :desc)
-          (plist-get info :url)
-          (plist-get info :type)))
+          (propertize (ypv--channel-info-name info) 'face 'font-lock-type-face)
+          (ypv--channel-info-desc info)
+          (ypv--channel-info-url info)
+          (ypv--channel-info-type info)))
 
 (cl-defun ypv-create-sources ()
   `((name . "channel list")
