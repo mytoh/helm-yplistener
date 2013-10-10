@@ -23,9 +23,10 @@
   (concat "http://" info "/" "index.txt"))
 
 (cl-defun ypv--url-retrieve (url)
-  (ypv--replace-html-entities
-   (ypv--remove-http-header
-    (url-retrieve-synchronously url))))
+  (-> url
+    url-retrieve-synchronously
+    ypv--remove-http-header
+    ypv--replace-html-entities))
 
 (cl-defun ypv--get-channel (info)
   (list (car info)
@@ -70,7 +71,8 @@
    :ip (cl-fourth info)
    :url (cl-fifth info)
    :genre (cl-sixth info)
-   :desc (cl-seventh info)))
+   :desc (cl-seventh info)
+   :type (cl-nth-value 10 info)))
 
 (cl-defun ypv--replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
@@ -117,17 +119,18 @@
   (-map
    #'(lambda (info)
        (cons
-        ;; display
+        ;; display candidate
         (ypv-create-display-candidate info)
-        ;; real
+        ;; real candidate
         info))
    (ypv--get/parse-channels ypv-yp-urls)))
 
 (cl-defun ypv-create-display-candidate (info)
-  (format "%s %s %s"
+  (format "%s %s %s %s"
           (propertize (plist-get info :name) 'face 'font-lock-type-face)
           (plist-get info :desc)
-          (plist-get info :url)))
+          (plist-get info :url)
+          (plist-get info :type)))
 
 (cl-defun ypv-create-sources ()
   `((name . "channel list")
