@@ -6,6 +6,7 @@
 
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
+(require 'dash)
 
 
 (defvar ypv-yp-urls
@@ -32,7 +33,7 @@
          (ypv--make-yp-index-url (cadr info)))))
 
 (cl-defun ypv--get-channels (yp-info)
-  (cl-mapcar
+  (-map
    #'ypv--get-channel
    yp-info))
 
@@ -54,7 +55,7 @@
   (cl-letf* ((yp-name (car info))
              (content (cadr info))
              (channels (split-string content "\n")))
-    (cl-mapcar
+    (-map
      #'(lambda (x)
          (ypv--channel-info-to-plist
           (append (list yp-name)
@@ -113,7 +114,7 @@
 
 
 (cl-defun ypv-create-candidates ()
-  (cl-mapcar
+  (-map
    #'(lambda (info)
        (cons
         ;; display
