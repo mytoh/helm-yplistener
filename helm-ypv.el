@@ -7,12 +7,14 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
+(require 's)
 
 
 (defvar ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
-    (dp  "dp.prgrssv.net"))
+    (dp  "dp.prgrssv.net")
+    )
   "Yellow Pages urls")
 
 (defvar ypv-local-address
@@ -94,8 +96,7 @@
   (cl-letf ((ents '(("&lt;" "<")
                     ("&gt;" ">"))))
     (ypv--replace-html-entites-internal
-     ents
-     str)))
+     ents str)))
 
 (cl-defun ypv--replace-html-entites-internal (lst str)
   (if (null lst)
@@ -142,9 +143,11 @@
    (ypv--get/parse-channels ypv-yp-urls)))
 
 (cl-defun ypv-create-display-candidate (info)
-  (format "%s %s %s %s"
-          (propertize (ypv--channel-info-name info) 'face 'font-lock-type-face)
+  (format "%s %s %s %s %s"
+          (s-pad-right 15 " "
+                       (propertize (ypv--channel-info-name info) 'face 'font-lock-type-face))
           (ypv--channel-info-desc info)
+          (ypv--channel-info-genre info)
           (ypv--channel-info-url info)
           (ypv--channel-info-type info)))
 
