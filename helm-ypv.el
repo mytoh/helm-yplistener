@@ -10,37 +10,44 @@
 (require 's)
 
 
-(defvar ypv-yp-urls
+(defgroup helm-ypv nil
+  "yellow ppage viewer with helm interface"
+  :group 'helm)
+
+(defcustom helm-ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
-    (dp  "dp.prgrssv.net")
-    )
-  "Yellow Pages urls")
+    (dp  "dp.prgrssv.net"))
+  "Yellow Page urls"
+  :type 'list
+  :group 'helm-ypv)
 
-(defvar ypv-local-address
+(defcustom helm-ypv-local-address
   "localhost:7144"
-  "local PeerCast addr:port")
+  "local PeerCast addr:port"
+  :type 'string
+  :group 'helm-ypv)
 
-(cl-defun ypv--make-yp-index-url (info)
+(cl-defun helm-ypv-make-yp-index-url (info)
   (concat "http://" info "/" "index.txt"))
 
-(cl-defun ypv--url-retrieve (url)
+(cl-defun helm-ypv-url-retrieve (url)
   (-> url
     url-retrieve-synchronously
-    ypv--remove-http-header
-    ypv--replace-html-entities))
+    helm-ypv-remove-http-header
+    helm-ypv-replace-html-entities))
 
-(cl-defun ypv--get-channel (info)
+(cl-defun helm-ypv-get-channel (info)
   (list (car info)
-        (ypv--url-retrieve
-         (ypv--make-yp-index-url (cadr info)))))
+        (helm-ypv-url-retrieve
+         (helm-ypv-make-yp-index-url (cadr info)))))
 
-(cl-defun ypv--get-channels (yp-info)
+(cl-defun helm-ypv-get-channels (yp-info)
   (-map
-   #'ypv--get-channel
+   #'helm-ypv-get-channel
    yp-info))
 
-(cl-defun ypv--remove-http-header (buf)
+(cl-defun helm-ypv-remove-http-header (buf)
   ;; remove header info, [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
   (cl-letf ((content nil))
     (with-current-buffer buf
@@ -49,23 +56,23 @@
         (re-search-forward "^$" nil 'move)
         (setq content (buffer-substring-no-properties (+ 1 (point)) (- (point-max) 1)))
         (kill-buffer (current-buffer))))
-    (ypv--string->utf-8 content)))
+    (helm-ypv-string->utf-8 content)))
 
-(cl-defun ypv--string->utf-8 (str)
+(cl-defun helm-ypv-string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))
 
-(cl-defun ypv--parse-channels (info)
+(cl-defun helm-ypv-parse-channels (info)
   (cl-letf* ((yp-name (car info))
              (content (cadr info))
              (channels (split-string content "\n")))
     (-map
      #'(lambda (x)
-         (ypv--channel-info-to-plist
+         (helm-ypv-channel-info-to-plist
           (append (list yp-name)
                   (split-string x "<>"))))
      channels)))
 
-(cl-defun ypv--channel-info-to-plist (info)
+(cl-defun helm-ypv-channel-info-to-plist (info)
   (list
    :yp (symbol-name (cl-first info))
    :name (cl-second info)
@@ -76,53 +83,53 @@
    :desc (cl-seventh info)
    :type (cl-nth-value 10 info)))
 
-(cl-defun ypv--channel-info-name (info)
+(cl-defun helm-ypv-channel-info-name (info)
   (plist-get info :name))
-(cl-defun ypv--channel-info-id (info)
+(cl-defun helm-ypv-channel-info-id (info)
   (plist-get info :id))
-(cl-defun ypv--channel-info-desc (info)
+(cl-defun helm-ypv-channel-info-desc (info)
   (plist-get info :desc))
-(cl-defun ypv--channel-info-url (info)
+(cl-defun helm-ypv-channel-info-url (info)
   (plist-get info :url))
-(cl-defun ypv--channel-info-type (info)
+(cl-defun helm-ypv-channel-info-type (info)
   (plist-get info :type))
-(cl-defun ypv--channel-info-ip (info)
+(cl-defun helm-ypv-channel-info-ip (info)
   (plist-get info :ip))
-(cl-defun ypv--channel-info-genre (info)
+(cl-defun helm-ypv-channel-info-genre (info)
   (plist-get info :genre))
 
 
-(cl-defun ypv--replace-html-entities (str)
+(cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
                     ("&gt;" ">"))))
-    (ypv--replace-html-entites-internal
+    (helm-ypv-replace-html-entites-internal
      ents str)))
 
-(cl-defun ypv--replace-html-entites-internal (lst str)
+(cl-defun helm-ypv-replace-html-entites-internal (lst str)
   (if (null lst)
       str
     (cl-letf* ((rep (car lst))
                (rep-str (replace-regexp-in-string
                          (car rep) (cadr rep)
                          str)))
-      (ypv--replace-html-entites-internal
+      (helm-ypv-replace-html-entites-internal
        (cdr lst) rep-str))))
 
 
-(cl-defun ypv--get/parse-channels (yp-infos)
+(cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
-   #'ypv--parse-channels
-   (ypv--get-channels yp-infos)))
+   #'helm-ypv-parse-channels
+   (helm-ypv-get-channels yp-infos)))
 
-(cl-defun ypv-action-open-url (candidate)
+(cl-defun helm-ypv-action-open-url (candidate)
   (cl-letf* ((info candidate)
              (url (format "http://%s/pls/%s?tip=%s"
-                          ypv-local-address
-                          (ypv--channel-info-id info)
-                          (ypv--channel-info-ip info))))
-    (ypv-player-mplayer url)))
+                          helm-ypv-local-address
+                          (helm-ypv-channel-info-id info)
+                          (helm-ypv-channel-info-ip info))))
+    (helm-ypv-player-mplayer url)))
 
-(cl-defun ypv-player-mplayer (url)
+(cl-defun helm-ypv-player-mplayer (url)
   (message url)
   (cl-letf ((command (concat "mplayer --playlist="
                              "'" url "'"
@@ -132,26 +139,26 @@
     (start-process-shell-command "ypv" nil command)))
 
 
-(cl-defun ypv-create-candidates ()
+(cl-defun helm-ypv-create-candidates ()
   (-map
    #'(lambda (info)
        (cons
         ;; display candidate
-        (ypv-create-display-candidate info)
+        (helm-ypv-create-display-candidate info)
         ;; real candidate
         info))
-   (ypv--get/parse-channels ypv-yp-urls)))
+   (helm-ypv-get/parse-channels helm-ypv-yp-urls)))
 
-(cl-defun ypv--add-face (str face)
+(cl-defun helm-ypv-add-face (str face)
   (propertize str 'face face))
 
-(cl-defun ypv-create-display-candidate (info)
+(cl-defun helm-ypv-create-display-candidate (info)
   (cl-letf ((format-string "%-17.17s %s %s %s %s")
-            (name (ypv--add-face (ypv--channel-info-name info) 'font-lock-type-face))
-            (desc (ypv--add-face (ypv--channel-info-desc info) 'font-lock-string-face))
-            (genre (ypv--add-face (ypv--channel-info-genre info) 'font-lock-keyword-face))
-            (url (ypv--add-face (ypv--channel-info-url info) 'font-lock-reference-face))
-            (type (ypv--add-face (ypv--channel-info-type info) 'font-lock-type-face)))
+            (name (helm-ypv-add-face (helm-ypv-channel-info-name info) 'font-lock-type-face))
+            (desc (helm-ypv-add-face (helm-ypv-channel-info-desc info) 'font-lock-string-face))
+            (genre (helm-ypv-add-face (helm-ypv-channel-info-genre info) 'font-lock-keyword-face))
+            (url (helm-ypv-add-face (helm-ypv-channel-info-url info) 'font-lock-reference-face))
+            (type (helm-ypv-add-face (helm-ypv-channel-info-type info) 'font-lock-type-face)))
     (format format-string
             name
             desc
@@ -159,17 +166,17 @@
             url
             type)))
 
-(cl-defun ypv-create-sources ()
+(cl-defun helm-ypv-create-sources ()
   `((name . "channel list")
-    (candidates . ,(ypv-create-candidates))
-    (action . (("Open url" .  ypv-action-open-url)))))
+    (candidates . ,(helm-ypv-create-candidates))
+    (action . (("Open url" .  helm-ypv-action-open-url)))))
 
 
 ;;;###autoload
 (cl-defun helm-ypv ()
   "Helm command for yp."
   (interactive)
-  (helm (ypv-create-sources)))
+  (helm (helm-ypv-create-sources)))
 
 (provide 'helm-ypv)
 
