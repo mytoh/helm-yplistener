@@ -18,7 +18,7 @@
   "Yellow Pages urls")
 
 (defvar ypv-local-address
-  "localhost:7155"
+  "localhost:7144"
   "local PeerCast addr:port")
 
 (cl-defun ypv--make-yp-index-url (info)
@@ -126,7 +126,7 @@
   (message url)
   (cl-letf ((command (concat "mplayer --playlist="
                              "'" url "'"
-                             " --softvol --nocache --framedrop --no-consolecontrols"
+                             " --softvol --nocache --framedrop --really-quiet --no-consolecontrols"
                              " &" )))
     (message command)
     (start-process-shell-command "ypv" nil command)))
@@ -142,14 +142,22 @@
         info))
    (ypv--get/parse-channels ypv-yp-urls)))
 
+(cl-defun ypv--add-face (str face)
+  (propertize str 'face face))
+
 (cl-defun ypv-create-display-candidate (info)
-  (format "%s %s %s %s %s"
-          (s-pad-right 15 " "
-                       (propertize (ypv--channel-info-name info) 'face 'font-lock-type-face))
-          (ypv--channel-info-desc info)
-          (ypv--channel-info-genre info)
-          (ypv--channel-info-url info)
-          (ypv--channel-info-type info)))
+  (cl-letf ((format-string "%-17.17s %s %s %s %s")
+            (name (ypv--add-face (ypv--channel-info-name info) 'font-lock-type-face))
+            (desc (ypv--add-face (ypv--channel-info-desc info) 'font-lock-string-face))
+            (genre (ypv--add-face (ypv--channel-info-genre info) 'font-lock-keyword-face))
+            (url (ypv--add-face (ypv--channel-info-url info) 'font-lock-reference-face))
+            (type (ypv--add-face (ypv--channel-info-type info) 'font-lock-type-face)))
+    (format format-string
+            name
+            desc
+            genre
+            url
+            type)))
 
 (cl-defun ypv-create-sources ()
   `((name . "channel list")
