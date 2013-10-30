@@ -17,10 +17,14 @@
 (defcustom helm-ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
-    (dp  "dp.prgrssv.net"))
+    (dp  "dp.prgrssv.net")
+    (hktv "games.himitsukichi.com/hktv")
+    (turf-page "peercast.takami98.net/turf-page")
+    (oekaki "oekakiyp.appspot.com"))
   "Yellow Page urls"
   :type 'list
   :group 'helm-ypv)
+
 
 (defcustom helm-ypv-local-address
   "localhost:7144"
@@ -73,6 +77,7 @@
      channels)))
 
 (cl-defun helm-ypv-channel-info-to-plist (info)
+  ;; name<>id<>ip:port<>url<>genre<>desc<>169<>163<>bitrate<>type<><><><><><>time<><>comment<>0
   (list
    :yp (symbol-name (cl-first info))
    :name (cl-second info)
@@ -81,7 +86,10 @@
    :url (cl-fifth info)
    :genre (cl-sixth info)
    :desc (cl-seventh info)
-   :type (cl-nth-value 10 info)))
+   :bitrate (cl-tenth info)
+   :type (cl-nth-value 10 info)
+   :time (cl-nth-value 16 info)
+   :comment (cl-nth-value 18 info)))
 
 (cl-defun helm-ypv-channel-info-name (info)
   (plist-get info :name))
@@ -97,7 +105,12 @@
   (plist-get info :ip))
 (cl-defun helm-ypv-channel-info-genre (info)
   (plist-get info :genre))
-
+(cl-defun helm-ypv-channel-info-bitrate (info)
+  (plist-get info :bitrate))
+(cl-defun helm-ypv-channel-info-time (info)
+  (plist-get info :time))
+(cl-defun helm-ypv-channel-info-comment (info)
+  (plist-get info :comment))
 
 (cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
@@ -115,7 +128,6 @@
       (helm-ypv-replace-html-entites-internal
        (cdr lst) rep-str))))
 
-
 (cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
    #'helm-ypv-parse-channels
@@ -123,11 +135,14 @@
 
 (cl-defun helm-ypv-action-open-url (candidate)
   (cl-letf* ((info candidate)
-             (url (format "http://%s/pls/%s?tip=%s"
-                          helm-ypv-local-address
-                          (helm-ypv-channel-info-id info)
-                          (helm-ypv-channel-info-ip info))))
+             (url (helm-ypv-make-url info)))
     (helm-ypv-player-mplayer url)))
+
+(cl-defun helm-ypv-make-url (info)
+  (format "http://%s/pls/%s?tip=%s"
+          helm-ypv-local-address
+          (helm-ypv-channel-info-id info)
+          (helm-ypv-channel-info-ip info)))
 
 (cl-defun helm-ypv-player-mplayer (url)
   (message url)
@@ -153,18 +168,23 @@
   (propertize str 'face face))
 
 (cl-defun helm-ypv-create-display-candidate (info)
-  (cl-letf ((format-string "%-17.17s %s %s %s %s")
+  (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")
             (name (helm-ypv-add-face (helm-ypv-channel-info-name info) 'font-lock-type-face))
-            (desc (helm-ypv-add-face (helm-ypv-channel-info-desc info) 'font-lock-string-face))
             (genre (helm-ypv-add-face (helm-ypv-channel-info-genre info) 'font-lock-keyword-face))
+            (desc (helm-ypv-add-face (helm-ypv-channel-info-desc info) 'font-lock-string-face))
             (url (helm-ypv-add-face (helm-ypv-channel-info-url info) 'font-lock-reference-face))
-            (type (helm-ypv-add-face (helm-ypv-channel-info-type info) 'font-lock-type-face)))
+            (type (helm-ypv-add-face (helm-ypv-channel-info-type info) 'font-lock-type-face))
+            (bitrate (helm-ypv-add-face (helm-ypv-channel-info-bitrate info) 'font-lock-preprocessor-face))
+            (time (helm-ypv-add-face (helm-ypv-channel-info-time info) 'font-lock-preprocessor-face))
+            (comment (helm-ypv-add-face (helm-ypv-channel-info-comment info) 'font-lock-preprocessor-face)))
     (format format-string
             name
             desc
+            comment
             genre
             url
-            type)))
+            type
+            time)))
 
 (cl-defun helm-ypv-create-sources ()
   `((name . "channel list")
@@ -174,7 +194,7 @@
 
 ;;;###autoload
 (cl-defun helm-ypv ()
-  "Helm command for yp."
+  "Yellow Page viwer with Helm"
   (interactive)
   (helm (helm-ypv-create-sources)))
 
