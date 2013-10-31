@@ -32,6 +32,12 @@
   :type 'string
   :group 'helm-ypv)
 
+(defcustom helm-ypv-player-type
+  'mplayer
+  "player type"
+  :type 'symbol
+  :group 'helm-ypv)
+
 (cl-defun helm-ypv-make-yp-index-url (info)
   (concat "http://" info "/" "index.txt"))
 
@@ -136,13 +142,12 @@
 (cl-defun helm-ypv-action-open-url (candidate)
   (cl-letf* ((info candidate)
              (url (helm-ypv-make-url info)))
-    (helm-ypv-player-mplayer url)))
+    (helm-ypv-player helm-ypv-player-type url)))
 
-(cl-defun helm-ypv-make-url (info)
-  (format "http://%s/pls/%s?tip=%s"
-          helm-ypv-local-address
-          (helm-ypv-channel-info-id info)
-          (helm-ypv-channel-info-ip info)))
+(cl-defun helm-ypv-player (player url)
+  (case player
+    (mplayer
+     (helm-ypv-player-mplayer url))))
 
 (cl-defun helm-ypv-player-mplayer (url)
   (message url)
@@ -153,6 +158,11 @@
     (message command)
     (start-process-shell-command "ypv" nil command)))
 
+(cl-defun helm-ypv-make-url (info)
+  (format "http://%s/pls/%s?tip=%s"
+          helm-ypv-local-address
+          (helm-ypv-channel-info-id info)
+          (helm-ypv-channel-info-ip info)))
 
 (cl-defun helm-ypv-create-candidates ()
   (-map
