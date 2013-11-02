@@ -33,7 +33,7 @@
   :group 'helm-ypv)
 
 (defcustom helm-ypv-player-type
-  'mplayer
+  'mplayer2
   "player type"
   :type 'symbol
   :group 'helm-ypv)
@@ -146,10 +146,10 @@
 
 (cl-defun helm-ypv-player (player url)
   (case player
-    (mplayer
-     (helm-ypv-player-mplayer url))))
+    (mplayer2
+     (helm-ypv-player-mplayer2 url))))
 
-(cl-defun helm-ypv-player-mplayer (url)
+(cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
   (cl-letf ((command (concat "mplayer --playlist="
                              "'" url "'"
@@ -196,7 +196,7 @@
             type
             time)))
 
-(cl-defun helm-ypv-create-sources ()
+(cl-defun helm-source-ypv-channels ()
   `((name . "channel list")
     (candidates . ,(helm-ypv-create-candidates))
     (action . (("Open url" .  helm-ypv-action-open-url)))))
@@ -206,7 +206,7 @@
 (cl-defun helm-ypv ()
   "Yellow Page viwer with Helm"
   (interactive)
-  (helm (helm-ypv-create-sources)))
+  (helm-other-buffer (helm-source-ypv-channels) "*Helm ypv*"))
 
 (provide 'helm-ypv)
 
