@@ -204,9 +204,12 @@
 
 ;;;###autoload
 (cl-defun helm-ypv ()
-  "Yellow Page viwer with Helm"
+  "Preconfigured `helm' for Yellow Pages"
   (interactive)
-  (helm-other-buffer (helm-source-ypv-channels) "*Helm ypv*"))
+  (helm-other-buffer (list
+                      (helm-source-ypv-channels))
+                     "*Helm ypv*"))
+
 
 (provide 'helm-ypv)
 
