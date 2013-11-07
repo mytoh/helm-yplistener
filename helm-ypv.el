@@ -77,14 +77,27 @@
              (channels (split-string content "\n")))
     (-map
      #'(lambda (x)
-         (helm-ypv-channel-info-to-plist
+         (helm-ypv-info-to-channel
           (append (list yp-name)
                   (split-string x "<>"))))
      channels)))
 
-(cl-defun helm-ypv-channel-info-to-plist (info)
-  ;; name<>id<>ip:port<>url<>genre<>desc<>169<>163<>bitrate<>type<><><><><><>time<><>comment<>0
-  (list
+(cl-defstruct ypv-channel
+  (yp "")
+  (name "")
+  (id "")
+  (ip "")
+  (url "")
+  (genre "")
+  (desc "")
+  (bitrate "")
+  (type "")
+  (time "")
+  (comment "")
+  )
+
+(cl-defun helm-ypv-info-to-channel (info)
+  (make-ypv-channel
    :yp (symbol-name (cl-first info))
    :name (cl-second info)
    :id (cl-third info)
@@ -95,28 +108,9 @@
    :bitrate (cl-tenth info)
    :type (cl-nth-value 10 info)
    :time (cl-nth-value 16 info)
-   :comment (cl-nth-value 18 info)))
+   :comment (cl-nth-value 18 info)
+   ))
 
-(cl-defun helm-ypv-channel-info-name (info)
-  (plist-get info :name))
-(cl-defun helm-ypv-channel-info-id (info)
-  (plist-get info :id))
-(cl-defun helm-ypv-channel-info-desc (info)
-  (plist-get info :desc))
-(cl-defun helm-ypv-channel-info-url (info)
-  (plist-get info :url))
-(cl-defun helm-ypv-channel-info-type (info)
-  (plist-get info :type))
-(cl-defun helm-ypv-channel-info-ip (info)
-  (plist-get info :ip))
-(cl-defun helm-ypv-channel-info-genre (info)
-  (plist-get info :genre))
-(cl-defun helm-ypv-channel-info-bitrate (info)
-  (plist-get info :bitrate))
-(cl-defun helm-ypv-channel-info-time (info)
-  (plist-get info :time))
-(cl-defun helm-ypv-channel-info-comment (info)
-  (plist-get info :comment))
 
 (cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
@@ -144,6 +138,12 @@
              (url (helm-ypv-make-url info)))
     (helm-ypv-player helm-ypv-player-type url)))
 
+(cl-defun helm-ypv-make-url (channel)
+  (format "http://%s/pls/%s?tip=%s"
+          helm-ypv-local-address
+          (ypv-channel-id channel)
+          (ypv-channel-ip channel)))
+
 (cl-defun helm-ypv-player (player url)
   (case player
     (mplayer2
@@ -158,11 +158,6 @@
     (message command)
     (start-process-shell-command "ypv" nil command)))
 
-(cl-defun helm-ypv-make-url (info)
-  (format "http://%s/pls/%s?tip=%s"
-          helm-ypv-local-address
-          (helm-ypv-channel-info-id info)
-          (helm-ypv-channel-info-ip info)))
 
 (cl-defun helm-ypv-create-candidates ()
   (-map
@@ -177,16 +172,16 @@
 (cl-defun helm-ypv-add-face (str face)
   (propertize str 'face face))
 
-(cl-defun helm-ypv-create-display-candidate (info)
+(cl-defun helm-ypv-create-display-candidate (channel)
   (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")
-            (name (helm-ypv-add-face (helm-ypv-channel-info-name info) 'font-lock-type-face))
-            (genre (helm-ypv-add-face (helm-ypv-channel-info-genre info) 'font-lock-keyword-face))
-            (desc (helm-ypv-add-face (helm-ypv-channel-info-desc info) 'font-lock-string-face))
-            (url (helm-ypv-add-face (helm-ypv-channel-info-url info) 'font-lock-reference-face))
-            (type (helm-ypv-add-face (helm-ypv-channel-info-type info) 'font-lock-type-face))
-            (bitrate (helm-ypv-add-face (helm-ypv-channel-info-bitrate info) 'font-lock-preprocessor-face))
-            (time (helm-ypv-add-face (helm-ypv-channel-info-time info) 'font-lock-preprocessor-face))
-            (comment (helm-ypv-add-face (helm-ypv-channel-info-comment info) 'font-lock-preprocessor-face)))
+            (name (helm-ypv-add-face (ypv-channel-name channel) 'font-lock-type-face))
+            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'font-lock-keyword-face))
+            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'font-lock-string-face))
+            (url (helm-ypv-add-face (ypv-channel-url channel) 'font-lock-reference-face))
+            (type (helm-ypv-add-face (ypv-channel-type channel) 'font-lock-type-face))
+            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'font-lock-preprocessor-face))
+            (time (helm-ypv-add-face (ypv-channel-time channel) 'font-lock-preprocessor-face))
+            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'font-lock-preprocessor-face)))
     (format format-string
             name
             desc
