@@ -82,7 +82,8 @@
                   (split-string x "<>"))))
      channels)))
 
-(cl-defstruct ypv-channel
+(cl-defstruct (ypv-channel
+               (:constructor ypv-channel-new))
   (yp "")
   (name "")
   (id "")
@@ -97,7 +98,7 @@
   )
 
 (cl-defun helm-ypv-info-to-channel (info)
-  (make-ypv-channel
+  (ypv-channel-new
    :yp (symbol-name (cl-first info))
    :name (cl-second info)
    :id (cl-third info)
