@@ -202,10 +202,9 @@
 (cl-defun helm-ypv ()
   "Preconfigured `helm' for Yellow Pages"
   (interactive)
-  (helm-other-buffer (list
-                      (helm-source-ypv-channels))
-                     "*Helm ypv*"))
-
+  (helm :sources (list
+                  (helm-source-ypv-channels))
+        :buffer "*Helm ypv*"))
 
 (provide 'helm-ypv)
 
