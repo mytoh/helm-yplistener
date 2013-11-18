@@ -213,6 +213,7 @@
 
 
 ;;;; helm-ypv-bookmark
+
 ;;;;; internal
 
 (cl-defun helm-ypv-bookmark-make-url (bkm)
@@ -222,16 +223,26 @@
           (ypv-bookmark-ip bkm)))
 
 ;;;;; bookmark data file
+
 (cl-defun helm-ypv-bookmark-data-add (file data)
   (if (file-exists-p file)
-      (if (not (helm-ypv-bookmark-data-channel-exists-p file data))
-          (helm-ypv-bookmark-data-update file data))
+      (if (helm-ypv-bookmark-data-channel-exists-p file data)
+          (helm-ypv-bookmark-data-update file data)
+        (helm-ypv-bookmark-data-append file data))
     (with-temp-file file
       (cl-letf ((standard-output (current-buffer)))
         (prin1 (list data))))))
 
-(cl-defun helm-ypv-bookmark-data-update (file data)
+(cl-defun helm-ypv-bookmark-data-append (file data)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
+    (with-temp-file file
+      (cl-letf ((standard-output (current-buffer)))
+        (message "updating bookmark")
+        (prin1 (append old (list data)))
+        (message (format "added %s" data))))))
+
+(cl-defun helm-ypv-bookmark-data-update (file data)
+  (cl-letf ((old (cl-remove data (helm-ypv-bookmark-data-read file) :test #'equal)))
     (with-temp-file file
       (cl-letf ((standard-output (current-buffer)))
         (message "updating bookmark")
@@ -259,6 +270,7 @@
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
 ;;;;; bookmark info
+
 (cl-defstruct (ypv-bookmark
                (:constructor ypv-bookmark-new))
   (yp "")
@@ -272,6 +284,7 @@
   (type "")
   (time "")
   (comment "")
+  (broadcasting nil)
   )
 
 (cl-defun helm-ypv-channel->bookmark (channel)
@@ -287,6 +300,7 @@
    :type (ypv-channel-type channel)
    :time (ypv-channel-time  channel)
    :comment (ypv-channel-comment channel)
+   :broadcasting nil
    ))
 
 
@@ -309,7 +323,9 @@
 
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
-            (name (helm-ypv-add-face (ypv-bookmark-name bookmark) 'font-lock-type-face))
+            (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
+                                                                      'font-lock-type-face
+                                                                    'font-lock-builtin-face)))
             (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'font-lock-preprocessor-face)))
     (format format-string
             name
@@ -321,15 +337,19 @@
                          (ypv-channel-id c)))
               channels))
 
-(cl-defun helm-ypv-bookmark-find-broadcasting (bookmarks channels)
+(cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)
   (cl-remove-if
    #'(lambda (x) (eq x nil))
    (cl-map 'list
            #'(lambda (b)
                (if (helm-ypv-bookmark-channel-broadcasting-p b channels)
-                   b
-                 '()))
+                   (helm-ypv-bookmark-set-broadcasting b t)
+                 (helm-ypv-bookmark-set-broadcasting b nil)))
            bookmarks)))
+
+(cl-defun helm-ypv-bookmark-set-broadcasting (obj value)
+  (setf (ypv-bookmark-broadcasting obj) value)
+  obj)
 
 (cl-defun helm-ypv-bookmark-create-candidates (channels)
   (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
@@ -341,11 +361,12 @@
           (helm-ypv-bookmark-create-display-candidate bookmark)
           ;; real candidate
           bookmark))
-     (helm-ypv-bookmark-find-broadcasting
+     (helm-ypv-bookmark-find-broadcasting-channels
       (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
       channels))))
 
 ;;;;; source
+
 (cl-defun helm-source-ypv-bookmarks ()
   `((name . "Bookmarks")
     (candidates . ,(helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls)))
