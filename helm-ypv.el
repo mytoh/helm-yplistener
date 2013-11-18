@@ -209,22 +209,35 @@
 
 ;;; bookmark
 ;;;; internal
-(cl-defun helm-ypv-bookmark-add-data (file data)
-  (if (file-exists-p file)
-      (helm-ypv-bookmark-update-data file data)
-    (with-temp-file file
-      (cl-let ((standard-output (current-buffer)))
-              (prin1 (list data))))))
 
-(cl-defun helm-ypv-bookmark-update-data (file data)
-  (let ((old (helm-ypv-bookmark-read-data file)))
+(cl-defun helm-ypv-bookmark-data-add (file data)
+  (if (file-exists-p file)
+      (if (not (helm-ypv-bookmark-data-channel-exists-p file data))
+          (helm-ypv-bookmark-data-update file data))
     (with-temp-file file
-      (let ((standard-output (current-buffer)))
+      (cl-letf ((standard-output (current-buffer)))
+        (prin1 (list data))))))
+
+(cl-defun helm-ypv-bookmark-data-update (file data)
+  (cl-letf ((old (helm-ypv-bookmark-data-read file)))
+    (with-temp-file file
+      (cl-letf ((standard-output (current-buffer)))
         (message "updating bookmark")
         (prin1 (append old (list data)))
-        (message (format "add %s" data))))))
+        (message (format "added %s" data))))))
 
-(cl-defun helm-ypv-bookmark-read-data (file)
+(cl-defun helm-ypv-bookmark-data-remove (file data)
+  (cl-letf ((old (helm-ypv-bookmark-data-read file)))
+    (with-temp-file file
+      (cl-letf ((standard-output (current-buffer)))
+        (message "removing bookmark")
+        (prin1 (cl-remove data old :test #'equal))
+        (message (format "removed %s" data))))))
+
+(cl-defun helm-ypv-bookmark-data-channel-exists-p (file data)
+  (cl-find data (helm-ypv-bookmark-data-read file) :test #'equal))
+
+(cl-defun helm-ypv-bookmark-data-read (file)
   (with-temp-buffer
     (insert-file-contents file)
     (read (current-buffer))))
@@ -233,13 +246,14 @@
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
 ;;;; action
+
 (cl-defun helm-ypv-bookmark-action-add (candidate)
   (cl-letf* ((info candidate))
-    (helm-ypv-bookmark-add-data (helm-ypv-bookmark-data-file) info)))
+    (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file) info)))
 
 (cl-defun helm-ypv-bookmark-action-remove (candidate)
   (cl-letf* ((info candidate))
-    (helm-ypv-bookmark-add-data (helm-ypv-bookmark-data-file) info)))
+    (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) info)))
 
 (cl-defun helm-ypv-bookmark-action-open-channel (candidate)
   (cl-letf* ((info candidate)
@@ -268,14 +282,16 @@
             time)))
 
 (cl-defun helm-ypv-bookmark-create-candidates ()
-  (-map
-   #'(lambda (info)
-       (cons
-        ;; display candidate
-        (helm-ypv-bookmark-create-display-candidate info)
-        ;; real candidate
-        info))
-   (helm-ypv-bookmark-read-data (helm-ypv-bookmark-data-file))))
+  (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
+      '()
+    (-map
+     #'(lambda (info)
+         (cons
+          ;; display candidate
+          (helm-ypv-bookmark-create-display-candidate info)
+          ;; real candidate
+          info))
+     (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file)))))
 
 ;;;; source
 
@@ -283,11 +299,11 @@
   `((name . "Bookmarks")
     (candidates . ,(helm-ypv-bookmark-create-candidates))
     (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
-               ("Remove to bookmarks" . helm-ypv-bookmark-action-remove)))))
+               ("Remove bookmark" . helm-ypv-bookmark-action-remove)))))
 
 ;;;###autoload
 (cl-defun helm-ypv-bookmarks ()
-  "Preconfigured `helm' for Yellow Pages"
+  "Preconfigured `helm' for Yellow Pages bookmarks"
   (interactive)
   (helm :sources (list
                   (helm-source-ypv-bookmarks))
