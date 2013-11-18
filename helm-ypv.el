@@ -9,7 +9,6 @@
 (require 'dash)
 (require 's)
 
-
 (defgroup helm-ypv nil
   "yellow ppage viewer with helm interface"
   :group 'helm)
@@ -134,7 +133,7 @@
    #'helm-ypv-parse-channels
    (helm-ypv-get-channels yp-infos)))
 
-(cl-defun helm-ypv-action-open-url (candidate)
+(cl-defun helm-ypv-action-open-channel (candidate)
   (cl-letf* ((info candidate)
              (url (helm-ypv-make-url info)))
     (helm-ypv-player helm-ypv-player-type url)))
@@ -193,19 +192,113 @@
             time)))
 
 (cl-defun helm-source-ypv-channels ()
-  `((name . "channel list")
+  `((name . "Channel list")
     (candidates . ,(helm-ypv-create-candidates))
-    (action . (("Open url" .  helm-ypv-action-open-url)))))
-
+    (action . (("Open channel" .  helm-ypv-action-open-channel)
+               ("Add to bookmarks" . helm-ypv-bookmark-action-add)))))
 
 ;;;###autoload
 (cl-defun helm-ypv ()
   "Preconfigured `helm' for Yellow Pages"
   (interactive)
   (helm :sources (list
-                  (helm-source-ypv-channels))
+                  (helm-source-ypv-channels)
+                  (helm-source-ypv-bookmarks))
         :buffer "*Helm ypv*"))
 
+
+;;; bookmark
+;;;; internal
+(cl-defun helm-ypv-bookmark-add-data (file data)
+  (if (file-exists-p file)
+      (helm-ypv-bookmark-update-data file data)
+    (with-temp-file file
+      (cl-let ((standard-output (current-buffer)))
+              (prin1 (list data))))))
+
+(cl-defun helm-ypv-bookmark-update-data (file data)
+  (let ((old (helm-ypv-bookmark-read-data file)))
+    (with-temp-file file
+      (let ((standard-output (current-buffer)))
+        (message "updating bookmark")
+        (prin1 (append old (list data)))
+        (message (format "add %s" data))))))
+
+(cl-defun helm-ypv-bookmark-read-data (file)
+  (with-temp-buffer
+    (insert-file-contents file)
+    (read (current-buffer))))
+
+(cl-defun helm-ypv-bookmark-data-file ()
+  (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
+
+;;;; action
+(cl-defun helm-ypv-bookmark-action-add (candidate)
+  (cl-letf* ((info candidate))
+    (helm-ypv-bookmark-add-data (helm-ypv-bookmark-data-file) info)))
+
+(cl-defun helm-ypv-bookmark-action-remove (candidate)
+  (cl-letf* ((info candidate))
+    (helm-ypv-bookmark-add-data (helm-ypv-bookmark-data-file) info)))
+
+(cl-defun helm-ypv-bookmark-action-open-channel (candidate)
+  (cl-letf* ((info candidate)
+             (url (helm-ypv-make-url info)))
+    (helm-ypv-player helm-ypv-player-type url)))
+
+;;;; candidate
+
+(cl-defun helm-ypv-bookmark-create-display-candidate (channel)
+  (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")
+            (name (helm-ypv-add-face (ypv-channel-name channel) 'font-lock-type-face))
+            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'font-lock-keyword-face))
+            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'font-lock-string-face))
+            (url (helm-ypv-add-face (ypv-channel-url channel) 'font-lock-reference-face))
+            (type (helm-ypv-add-face (ypv-channel-type channel) 'font-lock-type-face))
+            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'font-lock-preprocessor-face))
+            (time (helm-ypv-add-face (ypv-channel-time channel) 'font-lock-preprocessor-face))
+            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'font-lock-preprocessor-face)))
+    (format format-string
+            name
+            desc
+            comment
+            genre
+            url
+            type
+            time)))
+
+(cl-defun helm-ypv-bookmark-create-candidates ()
+  (-map
+   #'(lambda (info)
+       (cons
+        ;; display candidate
+        (helm-ypv-bookmark-create-display-candidate info)
+        ;; real candidate
+        info))
+   (helm-ypv-bookmark-read-data (helm-ypv-bookmark-data-file))))
+
+;;;; source
+
+(cl-defun helm-source-ypv-bookmarks ()
+  `((name . "Bookmarks")
+    (candidates . ,(helm-ypv-bookmark-create-candidates))
+    (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
+               ("Remove to bookmarks" . helm-ypv-bookmark-action-remove)))))
+
+;;;###autoload
+(cl-defun helm-ypv-bookmarks ()
+  "Preconfigured `helm' for Yellow Pages"
+  (interactive)
+  (helm :sources (list
+                  (helm-source-ypv-bookmarks))
+        :buffer "*Helm ypv bookmarks*"))
+
+
+
+
+
+
+;;; provide
 (provide 'helm-ypv)
 
 ;;; helm-ypv.el ends here
