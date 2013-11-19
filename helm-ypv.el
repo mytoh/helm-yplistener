@@ -15,155 +15,30 @@
 
 (require 'helm-ypv-global)
 (require 'helm-ypv-bookmark)
+(require 'helm-ypv-channel)
 
-
-(cl-defun helm-ypv-url-retrieve (url)
-  (-> url
-    url-retrieve-synchronously
-    helm-ypv-remove-http-header
-    helm-ypv-replace-html-entities))
-
-(cl-defun helm-ypv-get-channel (info)
-  (list (car info)
-        (helm-ypv-url-retrieve
-         (helm-ypv-make-yp-index-url (cadr info)))))
-
-(cl-defun helm-ypv-get-channels (yp-info)
-  (-map
-   #'helm-ypv-get-channel
-   yp-info))
-
-(cl-defun helm-ypv-remove-http-header (buf)
-  ;; remove header info, [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
-  (cl-letf ((content nil))
-    (with-current-buffer buf
-      (save-excursion
-        (goto-char (point-min))
-        (re-search-forward "^$" nil 'move)
-        (setq content (buffer-substring-no-properties (+ 1 (point)) (- (point-max) 1)))
-        (kill-buffer (current-buffer))))
-    (helm-ypv-string->utf-8 content)))
-
-(cl-defun helm-ypv-string->utf-8 (str)
-  (decode-coding-string str 'utf-8-unix))
-
-
-
-(cl-defstruct (ypv-channel
-               (:constructor ypv-channel-new))
-  (yp "")
-  (name "")
-  (id "")
-  (ip "")
-  (url "")
-  (genre "")
-  (desc "")
-  (bitrate "")
-  (type "")
-  (time "")
-  (comment "")
-  )
-
-(cl-defun helm-ypv-info-to-channel (info)
-  (ypv-channel-new
-   :yp (symbol-name (cl-first info))
-   :name (cl-second info)
-   :id (cl-third info)
-   :ip (cl-fourth info)
-   :url (cl-fifth info)
-   :genre (cl-sixth info)
-   :desc (cl-seventh info)
-   :bitrate (cl-tenth info)
-   :type (cl-nth-value 10 info)
-   :time (cl-nth-value 16 info)
-   :comment (cl-nth-value 18 info)
-   ))
-
-
-(cl-defun helm-ypv-replace-html-entities (str)
-  (cl-letf ((ents '(("&lt;" "<")
-                    ("&gt;" ">"))))
-    (helm-ypv-replace-html-entites-internal
-     ents str)))
-
-(cl-defun helm-ypv-replace-html-entites-internal (lst str)
-  (if (null lst)
-      str
-    (cl-letf* ((rep (car lst))
-               (rep-str (replace-regexp-in-string
-                         (car rep) (cadr rep)
-                         str)))
-      (helm-ypv-replace-html-entites-internal
-       (cdr lst) rep-str))))
-
-(cl-defun helm-ypv-get/parse-channels (yp-infos)
-  (cl-mapcan
-   #'helm-ypv-parse-channels
-   (helm-ypv-get-channels yp-infos)))
-
-(cl-defun helm-ypv-action-open-channel (candidate)
-  (cl-letf* ((info candidate)
-             (url (helm-ypv-make-url info)))
-    (helm-ypv-player helm-ypv-player-type url)))
-
-(cl-defun helm-ypv-make-url (channel)
-  (format "http://%s/pls/%s?tip=%s"
-          helm-ypv-local-address
-          (ypv-channel-id channel)
-          (ypv-channel-ip channel)))
-
-
-
-
-(cl-defun helm-ypv-create-candidates (channels)
-  (-map
-   #'(lambda (info)
-       (cons
-        ;; display candidate
-        (helm-ypv-create-display-candidate info)
-        ;; real candidate
-        info))
-   channels
-   ))
-
-(cl-defun helm-ypv-add-face (str face)
-  (propertize str 'face face))
-
-(cl-defun helm-ypv-create-display-candidate (channel)
-  (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")
-            (name (helm-ypv-add-face (ypv-channel-name channel) 'font-lock-type-face))
-            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'font-lock-keyword-face))
-            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'font-lock-string-face))
-            (url (helm-ypv-add-face (ypv-channel-url channel) 'font-lock-reference-face))
-            (type (helm-ypv-add-face (ypv-channel-type channel) 'font-lock-type-face))
-            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'font-lock-preprocessor-face))
-            (time (helm-ypv-add-face (ypv-channel-time channel) 'font-lock-preprocessor-face))
-            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'font-lock-preprocessor-face)))
-    (format format-string
-            name
-            desc
-            comment
-            genre
-            url
-            type
-            time)))
-
-(cl-defun helm-source-ypv-channels ()
-  `((name . "Channel list")
-    (candidates . ,(helm-ypv-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls)))
-    (action . (("Open channel" .  helm-ypv-action-open-channel)
-               ("Add to bookmarks" . helm-ypv-bookmark-action-add)))))
 
 ;;;###autoload
 (cl-defun helm-ypv ()
   "Preconfigured `helm' for Yellow Pages"
   (interactive)
-  (helm :sources (list
-                  (helm-source-ypv-channels)
-                  (helm-source-ypv-bookmarks)
-                  )
+  (helm :sources '(helm-source-ypv-channels
+                   helm-source-ypv-bookmarks)
         :buffer "*Helm ypv*"))
 
+;;;###autoload
+(cl-defun helm-ypv-bookmarks ()
+  "Preconfigured `helm' for Yellow Pages bookmarks"
+  (interactive)
+  (helm :sources '(helm-source-ypv-bookmarks)
+        :buffer "*Helm ypv bookmarks*"))
+
+;;;###autoload
+(cl-defun helm-ypv-channels ()
+  "Preconfigured `helm' for Yellow Pages"
+  (interactive)
+  (helm :sources '(helm-source-ypv-channels)
+        :buffer "*Helm ypv*"))
 
 ;;;; provide
 (provide 'helm-ypv)

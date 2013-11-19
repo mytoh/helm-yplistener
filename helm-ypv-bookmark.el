@@ -170,21 +170,19 @@
 
 ;;;;; source
 
-(cl-defun helm-source-ypv-bookmarks ()
-  `((name . "Bookmarks")
-    (candidates . ,(helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls)))
+
+(defvar helm-ypv-candidate-bookmarks nil)
+
+(cl-defun helm-ypv-bookmark-init ()
+  (setq helm-ypv-candidate-bookmarks
+        (helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
+
+(defvar helm-source-ypv-bookmarks
+  '((name . "Bookmarks")
+    (init . helm-ypv-bookmark-init)
+    (candidates . helm-ypv-candidate-bookmarks)
     (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
                ("Remove bookmark" . helm-ypv-bookmark-action-remove)))))
-
-;;;###autoload
-(cl-defun helm-ypv-bookmarks ()
-  "Preconfigured `helm' for Yellow Pages bookmarks"
-  (interactive)
-  (helm :sources (list
-                  (helm-source-ypv-bookmarks))
-        :buffer "*Helm ypv bookmarks*"))
-
-
 
 
 

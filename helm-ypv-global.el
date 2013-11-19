@@ -11,7 +11,7 @@
 (defcustom helm-ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
-    ;; (dp  "dp.prgrssv.net")
+    (dp  "dp.prgrssv.net")
     (hktv "games.himitsukichi.com/hktv")
     (turf-page "peercast.takami98.net/turf-page")
     (oekaki "oekakiyp.appspot.com"))
@@ -36,7 +36,7 @@
   (concat "http://" info "/" "index.txt"))
 
 (cl-defun helm-ypv-player (player url)
-  (case player
+  (cl-case player
     (mplayer2
      (helm-ypv-player-mplayer2 url))))
 
@@ -55,10 +55,79 @@
              (channels (split-string content "\n")))
     (-map
      #'(lambda (x)
-         (helm-ypv-info-to-channel
+         (helm-ypv-info->channel
           (append (list yp-name)
                   (split-string x "<>"))))
      channels)))
 
+(cl-defun helm-ypv-info->channel (info)
+  (ypv-channel-new
+   :yp (symbol-name (cl-first info))
+   :name (cl-second info)
+   :id (cl-third info)
+   :ip (cl-fourth info)
+   :url (cl-fifth info)
+   :genre (cl-sixth info)
+   :desc (cl-seventh info)
+   :bitrate (cl-tenth info)
+   :type (cl-nth-value 10 info)
+   :time (cl-nth-value 16 info)
+   :comment (cl-nth-value 18 info)
+   ))
+
+(cl-defun helm-ypv-replace-html-entities (str)
+  (cl-letf ((ents '(("&lt;" "<")
+                    ("&gt;" ">"))))
+    (helm-ypv-replace-html-entites-internal
+     ents str)))
+
+(cl-defun helm-ypv-replace-html-entites-internal (lst str)
+  (if (null lst)
+      str
+    (cl-letf* ((rep (car lst))
+               (rep-str (replace-regexp-in-string
+                         (car rep) (cadr rep)
+                         str)))
+      (helm-ypv-replace-html-entites-internal
+       (cdr lst) rep-str))))
+
+
+(cl-defun helm-ypv-url-retrieve (url)
+  (-> url
+    url-retrieve-synchronously
+    helm-ypv-remove-http-header
+    helm-ypv-replace-html-entities))
+
+(cl-defun helm-ypv-get-channel (info)
+  (list (car info)
+        (helm-ypv-url-retrieve
+         (helm-ypv-make-yp-index-url (cadr info)))))
+
+(cl-defun helm-ypv-get-channels (yp-info)
+  (-map
+   #'helm-ypv-get-channel
+   yp-info))
+
+(cl-defun helm-ypv-remove-http-header (buf)
+  ;; remove header info, [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
+  (cl-letf ((content nil))
+    (with-current-buffer buf
+      (save-excursion
+        (goto-char (point-min))
+        (re-search-forward "^$" nil 'move)
+        (setq content (buffer-substring-no-properties (+ 1 (point)) (- (point-max) 1)))
+        (kill-buffer (current-buffer))))
+    (helm-ypv-string->utf-8 content)))
+
+(cl-defun helm-ypv-string->utf-8 (str)
+  (decode-coding-string str 'utf-8-unix))
+
+(cl-defun helm-ypv-add-face (str face)
+  (propertize str 'face face))
+
+(cl-defun helm-ypv-get/parse-channels (yp-infos)
+  (cl-mapcan
+   #'helm-ypv-parse-channels
+   (helm-ypv-get-channels yp-infos)))
 
 (provide 'helm-ypv-global)
