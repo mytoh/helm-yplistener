@@ -10,8 +10,6 @@
 ;;;; deps
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
-(require 'dash)
-(require 's)
 
 (require 'helm-ypv-global)
 (require 'helm-ypv-bookmark)
@@ -20,7 +18,7 @@
 
 ;;;###autoload
 (cl-defun helm-ypv ()
-  "Preconfigured `helm' for Yellow Pages"
+  "Preconfigured `helm' for Channels and Bookmarks"
   (interactive)
   (helm :sources '(helm-source-ypv-channels
                    helm-source-ypv-bookmarks)

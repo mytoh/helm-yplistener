@@ -21,12 +21,7 @@
   (bitrate "")
   (type "")
   (time "")
-  (comment "")
-  )
-
-
-
-
+  (comment ""))
 
 
 (cl-defun helm-ypv-channel-action-open-channel (candidate)
@@ -40,7 +35,6 @@
           (ypv-channel-id channel)
           (ypv-channel-ip channel)))
 
-
 (cl-defun helm-ypv-channel-create-candidates (channels)
   (-map
    #'(lambda (info)
@@ -49,10 +43,7 @@
         (helm-ypv-channel-create-display-candidate info)
         ;; real candidate
         info))
-   channels
-   ))
-
-
+   channels))
 
 (cl-defun helm-ypv-channel-create-display-candidate (channel)
   (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")

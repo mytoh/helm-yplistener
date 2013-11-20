@@ -93,15 +93,20 @@
 
 
 (cl-defun helm-ypv-url-retrieve (url)
-  (-> url
-    url-retrieve-synchronously
-    helm-ypv-remove-http-header
-    helm-ypv-replace-html-entities))
+  (let ((res (-> url
+               url-retrieve-synchronously
+               helm-ypv-remove-http-header)))
+    (if (helm-ypv-empty-response-p res)
+        nil
+      (helm-ypv-replace-html-entities res))))
+
 
 (cl-defun helm-ypv-get-channel (info)
-  (list (car info)
-        (helm-ypv-url-retrieve
-         (helm-ypv-make-yp-index-url (cadr info)))))
+  (let ((res (helm-ypv-url-retrieve
+              (helm-ypv-make-yp-index-url (cadr info)))))
+    (if res
+        (list (car info) res)
+      nil)))
 
 (cl-defun helm-ypv-get-channels (yp-info)
   (-map
@@ -119,6 +124,9 @@
         (kill-buffer (current-buffer))))
     (helm-ypv-string->utf-8 content)))
 
+(cl-defun helm-ypv-empty-response-p (str)
+  (s-match "^\n$" str))
+
 (cl-defun helm-ypv-string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))
 
@@ -128,6 +136,6 @@
 (cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
    #'helm-ypv-parse-channels
-   (helm-ypv-get-channels yp-infos)))
+   (cl-remove nil (helm-ypv-get-channels yp-infos))))
 
 (provide 'helm-ypv-global)
