@@ -1,12 +1,12 @@
-;;;; helm-ypv-bookmark
+;;; helm-ypv-bookmark
 
-;;;; deps
+;;;;; deps
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
 
-(require 'helm-ypv-global)
+(require 'helm-ypv-global "helm-ypv/helm-ypv-global")
 
 ;;;;; internal
 

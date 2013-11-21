@@ -33,7 +33,7 @@
 
 
 (cl-defun helm-ypv-make-yp-index-url (info)
-  (concat "http://" info "/" "index.txt"))
+  (cl-concatenate 'string "http://" info "/" "index.txt"))
 
 (cl-defun helm-ypv-player (player url)
   (cl-case player
@@ -93,17 +93,17 @@
 
 
 (cl-defun helm-ypv-url-retrieve (url)
-  (let ((res (-> url
-               url-retrieve-synchronously
-               helm-ypv-remove-http-header)))
+  (cl-letf ((res (-> url
+                   url-retrieve-synchronously
+                   helm-ypv-remove-http-header)))
     (if (helm-ypv-empty-response-p res)
         nil
       (helm-ypv-replace-html-entities res))))
 
 
 (cl-defun helm-ypv-get-channel (info)
-  (let ((res (helm-ypv-url-retrieve
-              (helm-ypv-make-yp-index-url (cadr info)))))
+  (cl-letf ((res (helm-ypv-url-retrieve
+                  (helm-ypv-make-yp-index-url (cadr info)))))
     (if res
         (list (car info) res)
       nil)))
