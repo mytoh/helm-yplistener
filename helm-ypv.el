@@ -29,14 +29,14 @@
   "Preconfigured `helm' for Yellow Pages bookmarks"
   (interactive)
   (helm :sources '(helm-source-ypv-bookmarks)
-        :buffer "*Helm ypv bookmarks*"))
+        :buffer "*Helm Ypv Bookmarks*"))
 
 ;;;###autoload
 (cl-defun helm-ypv-channels ()
   "Preconfigured `helm' for Yellow Pages"
   (interactive)
   (helm :sources '(helm-source-ypv-channels)
-        :buffer "*Helm ypv*"))
+        :buffer "*Helm Ypv Channels*"))
 
 ;;;; provide
 (provide 'helm-ypv)

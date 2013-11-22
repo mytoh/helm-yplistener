@@ -127,9 +127,9 @@
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
             (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
-                                                                      'font-lock-type-face
+                                                                      'helm-ypv-name-face
                                                                     'font-lock-dcc-face)))
-            (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'font-lock-preprocessor-face)))
+            (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'helm-ypv-id-face)))
     (format format-string
             name
             id)))
@@ -183,7 +183,6 @@
     (candidates . helm-ypv-candidate-bookmarks)
     (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
                ("Remove bookmark" . helm-ypv-bookmark-action-remove)))))
-
 
 
 
