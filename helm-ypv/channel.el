@@ -5,8 +5,8 @@
 (require 'dash)
 (require 's)
 
-(require 'helm-ypv-global "helm-ypv/helm-ypv-global")
-(require 'helm-ypv-bookmark "helm-ypv/helm-ypv-bookmark")
+(require 'helm-ypv-global "helm-ypv/global")
+(require 'helm-ypv-bookmark "helm-ypv/bookmark")
 
 
 (cl-defstruct (ypv-channel

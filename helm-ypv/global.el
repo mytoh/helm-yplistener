@@ -42,10 +42,11 @@
 
 (cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
-  (cl-letf ((command (concat "mplayer --playlist="
-                             "'" url "'"
-                             " --softvol --nocache --framedrop --really-quiet --no-consolecontrols"
-                             " &" )))
+  (cl-letf ((command (cl-concatenate 'string
+                                     "mplayer --playlist="
+                                     "'" url "'"
+                                     " --softvol --nocache --framedrop --really-quiet --no-consolecontrols"
+                                     " &" )))
     (message command)
     (start-process-shell-command "ypv" nil command)))
 
@@ -56,8 +57,9 @@
     (-map
      #'(lambda (x)
          (helm-ypv-info->channel
-          (append (list yp-name)
-                  (split-string x "<>"))))
+          (cl-concatenate 'list
+                          (list yp-name)
+                          (split-string x "<>"))))
      channels)))
 
 (cl-defun helm-ypv-info->channel (info)

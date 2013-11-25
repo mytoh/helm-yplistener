@@ -6,7 +6,7 @@
 (require 'dash)
 (require 's)
 
-(require 'helm-ypv-global "helm-ypv/helm-ypv-global")
+(require 'helm-ypv-global "helm-ypv/global")
 
 ;;;;; internal
 
@@ -37,7 +37,7 @@
 (cl-defun helm-ypv-bookmark-data-append (file data)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (append old (list data)))
+    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list data)))
     (message (format "added %s" data))))
 
 (cl-defun helm-ypv-bookmark-data-update (file data)
@@ -47,7 +47,7 @@
                      old-bookmark data))
                   (helm-ypv-bookmark-data-read file))))
     (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (append old (list data)))
+    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list data)))
     (message (format "update to add %s" data))))
 
 (cl-defun helm-ypv-bookmark-data-remove (file bookmark)

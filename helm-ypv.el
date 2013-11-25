@@ -11,9 +11,9 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 
-(require 'helm-ypv-global "helm-ypv/helm-ypv-global")
-(require 'helm-ypv-bookmark "helm-ypv/helm-ypv-bookmark")
-(require 'helm-ypv-channel "helm-ypv/helm-ypv-channel")
+(require 'helm-ypv-global "helm-ypv/global")
+(require 'helm-ypv-bookmark "helm-ypv/bookmark")
+(require 'helm-ypv-channel "helm-ypv/channel")
 
 
 ;;;###autoload
