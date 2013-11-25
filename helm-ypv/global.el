@@ -127,7 +127,9 @@
     (helm-ypv-string->utf-8 content)))
 
 (cl-defun helm-ypv-empty-response-p (str)
-  (s-match "^\n$" str))
+  (if (stringp str)
+      (s-match "^\n$" str)
+    nil))
 
 (cl-defun helm-ypv-string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))

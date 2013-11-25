@@ -4,16 +4,16 @@
 
 ;;; Code:
 
-
 ;;;; helm-ypv
 
 ;;;; deps
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 
+;;;; local library
 (require 'helm-ypv-global "helm-ypv/global")
-(require 'helm-ypv-bookmark "helm-ypv/bookmark")
-(require 'helm-ypv-channel "helm-ypv/channel")
+(require 'helm-ypv-bookmark "helm-ypv/source/bookmark")
+(require 'helm-ypv-channel "helm-ypv/source/channel")
 
 
 ;;;###autoload
