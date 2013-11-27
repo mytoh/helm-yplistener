@@ -79,18 +79,19 @@
 
 (cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
-                    ("&gt;" ">"))))
-    (helm-ypv-replace-html-entites-internal
+                    ("&gt;" ">")
+                    ("&amp;" "&"))))
+    (helm-ypv-replace-html-entites-helper
      ents str)))
 
-(cl-defun helm-ypv-replace-html-entites-internal (lst str)
+(cl-defun helm-ypv-replace-html-entites-helper (lst str)
   (if (null lst)
       str
     (cl-letf* ((rep (car lst))
                (rep-str (replace-regexp-in-string
                          (car rep) (cadr rep)
                          str)))
-      (helm-ypv-replace-html-entites-internal
+      (helm-ypv-replace-html-entites-helper
        (cdr lst) rep-str))))
 
 
@@ -104,8 +105,9 @@
 
 
 (cl-defun helm-ypv-get-channel (info)
-  (cl-letf ((res (helm-ypv-url-retrieve
-                  (helm-ypv-make-yp-index-url (cadr info)))))
+  (cl-letf ((res (-> (cadr info)
+                   helm-ypv-make-yp-index-url
+                   helm-ypv-url-retrieve)))
     (if res
         (list (car info) res)
       nil)))
