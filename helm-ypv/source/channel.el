@@ -7,6 +7,7 @@
 
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-bookmark "helm-ypv/bookmark")
+(require 'helm-ypv-face "helm-ypv/face")
 
 
 (cl-defstruct (ypv-channel
