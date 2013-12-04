@@ -1,11 +1,11 @@
 
-;;;; deps
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
 
 (require 'helm-ypv-global "helm-ypv/global")
+(require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-bookmark "helm-ypv/bookmark")
 (require 'helm-ypv-face "helm-ypv/face")
 

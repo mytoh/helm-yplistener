@@ -7,6 +7,7 @@
 (require 's)
 
 (require 'helm-ypv-global "helm-ypv/global")
+(require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
 
 ;;;;; internal

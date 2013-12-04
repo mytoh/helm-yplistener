@@ -12,6 +12,7 @@
 
 ;;;; local library
 (require 'helm-ypv-global "helm-ypv/global")
+(require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-bookmark "helm-ypv/source/bookmark")
 (require 'helm-ypv-channel "helm-ypv/source/channel")
 
