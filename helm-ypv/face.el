@@ -1,4 +1,7 @@
-;;;; faces
+
+;;; face.el
+
+;;;;; Faces
 
 (cl-defun helm-ypv-add-face (str face)
   (propertize str 'face face))
@@ -48,5 +51,5 @@
   "face for channel id"
   :group 'helm-ypv)
 
-
+;;;;; Provide
 (provide 'helm-ypv-face)

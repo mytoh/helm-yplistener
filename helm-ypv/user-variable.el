@@ -1,9 +1,12 @@
 
+;;; user-variable.el
+
+;;;;; Group
 (defgroup helm-ypv nil
   "yellow ppage viewer with helm interface"
   :group 'helm)
 
-
+;;;;; Custom
 (defcustom helm-ypv-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
@@ -27,5 +30,5 @@
   :type 'symbol
   :group 'helm-ypv)
 
-
+;;; Provide
 (provide 'helm-ypv-user-variable)

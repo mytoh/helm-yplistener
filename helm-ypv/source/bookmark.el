@@ -1,16 +1,16 @@
-;;; helm-ypv-bookmark
+;;; bookmark.el
 
-;;;;; deps
+;;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
-
+;;;;;; Local
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
 
-;;;;; internal
+;;;;; Functions
 
 (cl-defun helm-ypv-bookmark-make-url (bkm)
   (format "http://%s/pls/%s?tip=%s"
@@ -22,7 +22,7 @@
   (equal (ypv-bookmark-id bmk1)
          (ypv-bookmark-id bmk2)))
 
-;;;;; bookmark data file
+;;;;;; Bookmark Data
 
 (cl-defun helm-ypv-bookmark-data-write (file data)
   (with-temp-file file
@@ -75,7 +75,7 @@
 (cl-defun helm-ypv-bookmark-data-file ()
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
-;;;;; bookmark info
+;;;;;; Bookmark Info
 
 (cl-defstruct (ypv-bookmark
                (:constructor ypv-bookmark-new))
@@ -108,7 +108,7 @@
    :broadcasting nil))
 
 
-;;;;; action
+;;;;;; Action
 
 (cl-defun helm-ypv-bookmark-action-add (candidate)
   (cl-letf* ((info (helm-ypv-bookmark-channel->bookmark candidate)))
@@ -124,7 +124,7 @@
     (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark)
     (helm-ypv-player helm-ypv-player-type url)))
 
-;;;;; candidate
+;;;;;; Candidate
 
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
@@ -170,8 +170,7 @@
       (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
       channels))))
 
-;;;;; source
-
+;;;;;; Source
 
 (defvar helm-ypv-candidate-bookmarks nil)
 
@@ -187,5 +186,5 @@
                ("Remove bookmark" . helm-ypv-bookmark-action-remove)))))
 
 
-
+;;; Provide
 (provide 'helm-ypv-bookmark)

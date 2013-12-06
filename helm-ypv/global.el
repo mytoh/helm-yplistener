@@ -1,11 +1,15 @@
 
+;;; global.el
+
+;;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
-
+;;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 
+;;;;; Functions
 (cl-defun helm-ypv-make-yp-index-url (info)
   (cl-concatenate 'string "http://" info "/" "index.txt"))
 
@@ -114,14 +118,11 @@
 (cl-defun helm-ypv-string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))
 
-
-
-
 (cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
    #'helm-ypv-parse-channels
    (cl-remove nil (helm-ypv-get-channels yp-infos))))
 
 
-;;; provide
+;;; Provide
 (provide 'helm-ypv-global)

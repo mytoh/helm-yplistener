@@ -1,22 +1,22 @@
 ;;; helm-ypv.el --- yp viewer with helm
 
-;;; Commentary:
+;;;; Commentary:
 
-;;; Code:
+;;;; Code:
+;;;;; Requires
+;;;;;; General
 
-;;;; helm-ypv
-
-;;;; deps
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 
-;;;; local library
+;;;;;; Local library
+
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-bookmark "helm-ypv/source/bookmark")
 (require 'helm-ypv-channel "helm-ypv/source/channel")
 
-
+;;;;; Autoloads
 ;;;###autoload
 (cl-defun helm-ypv ()
   "Preconfigured `helm' for Channels and Bookmarks"
@@ -39,7 +39,7 @@
   (helm :sources '(helm-source-ypv-channels)
         :buffer "*Helm Ypv Channels*"))
 
-;;;; provide
+;;;;; Provide
 (provide 'helm-ypv)
 
 ;;; helm-ypv.el ends here
