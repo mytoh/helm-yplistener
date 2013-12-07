@@ -52,8 +52,7 @@
    channels))
 
 (cl-defun helm-ypv-channel-create-display-candidate (channel)
-  (cl-letf ((format-string "%-17.17s %s [%s] %s %s %s %s")
-            (name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name-face))
+  (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name-face))
             (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre-face))
             (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc-face))
             (url (helm-ypv-add-face (ypv-channel-url channel) 'helm-ypv-url-face))
@@ -61,14 +60,8 @@
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate-face))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time-face))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment-face)))
-    (format format-string
-            name
-            desc
-            comment
-            genre
-            url
-            type
-            time)))
+    (format "%-17.17s %s [%s] %s %s %s %s"
+            name desc comment genre url type time)))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
