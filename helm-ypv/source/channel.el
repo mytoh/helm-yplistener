@@ -8,8 +8,9 @@
 ;;;;;; Local
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
-(require 'helm-ypv-bookmark "helm-ypv/bookmark")
 (require 'helm-ypv-face "helm-ypv/face")
+(require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
+
 
 
 ;;;;; Channel
@@ -85,4 +86,4 @@
                ("Add to bookmarks" . helm-ypv-bookmark-action-add)))))
 
 ;;; Provide
-(provide 'helm-ypv-channel)
+(provide 'helm-ypv-source-channel)

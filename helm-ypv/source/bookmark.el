@@ -187,4 +187,4 @@
 
 
 ;;; Provide
-(provide 'helm-ypv-bookmark)
+(provide 'helm-ypv-source-bookmark)
