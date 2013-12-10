@@ -23,7 +23,7 @@
   (cl-letf ((command (cl-concatenate 'string
                                      "mplayer --playlist="
                                      "'" url "'"
-                                     " --softvol --nocache --framedrop --really-quiet --no-consolecontrols"
+                                     " --softvol --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
                                      " &" )))
     (message command)
     (start-process-shell-command "ypv" nil command)))
