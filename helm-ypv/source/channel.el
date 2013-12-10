@@ -1,11 +1,11 @@
 ;;; channel.el
 
-;;;;; Requires
+;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
-;;;;;; Local
+;;;;; Local
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
@@ -13,7 +13,7 @@
 
 
 
-;;;;; Channel
+;;;; Channel
 (cl-defstruct (ypv-channel
                (:constructor ypv-channel-new))
   (yp "")
@@ -28,7 +28,7 @@
   (time "")
   (comment ""))
 
-;;;;; Action
+;;;; Action
 (cl-defun helm-ypv-channel-action-open-channel (candidate)
   (cl-letf* ((info candidate)
              (url (helm-ypv-channel-make-url info)))
@@ -40,7 +40,7 @@
           (ypv-channel-id channel)
           (ypv-channel-ip channel)))
 
-;;;;; Canditate
+;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
   (-map
    #'(lambda (info)
@@ -70,9 +70,16 @@
         (helm-ypv-channel-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
 
-;;;;; Source
+;;;; Source
+
+(defun helm-ypv-channel-add-source-mark (name)
+  (cond ((window-system)
+         (cl-concatenate 'string " " "📺" " "  name))
+        (t
+         name)))
+
 (defvar helm-source-ypv-channels
-  '((name . "Channel list")
+  `((name . ,(helm-ypv-channel-add-source-mark "Channel list"))
     (init . helm-ypv-channel-init)
     (candidates . helm-ypv-channel-candidate-channels)
     (action . (("Open channel" .  helm-ypv-channel-action-open-channel)

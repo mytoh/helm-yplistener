@@ -1,17 +1,17 @@
 ;;; bookmark.el
 
-;;;;; Requires
+;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'dash)
 (require 's)
-;;;;;; Local
+;;;;; Local
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
 
-;;;;; Functions
-
+;;;; Functions
+;;;;; Utils
 (cl-defun helm-ypv-bookmark-make-url (bkm)
   (format "http://%s/pls/%s?tip=%s"
           helm-ypv-local-address
@@ -22,7 +22,7 @@
   (equal (ypv-bookmark-id bmk1)
          (ypv-bookmark-id bmk2)))
 
-;;;;;; Bookmark Data
+;;;;; Bookmark Data
 
 (cl-defun helm-ypv-bookmark-data-write (file data)
   (with-temp-file file
@@ -75,7 +75,7 @@
 (cl-defun helm-ypv-bookmark-data-file ()
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
-;;;;;; Bookmark Info
+;;;;; Bookmark Info
 
 (cl-defstruct (ypv-bookmark
                (:constructor ypv-bookmark-new))
@@ -108,7 +108,7 @@
    :broadcasting nil))
 
 
-;;;;;; Action
+;;;;; Action
 
 (cl-defun helm-ypv-bookmark-action-add (candidate)
   (cl-letf* ((info (helm-ypv-bookmark-channel->bookmark candidate)))
@@ -124,7 +124,7 @@
     (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark)
     (helm-ypv-player helm-ypv-player-type url)))
 
-;;;;;; Candidate
+;;;;; Candidate
 
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
@@ -170,7 +170,7 @@
       (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
       channels))))
 
-;;;;;; Source
+;;;;; Source
 
 (defvar helm-ypv-candidate-bookmarks nil)
 
@@ -178,8 +178,15 @@
   (setq helm-ypv-candidate-bookmarks
         (helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
+(defun helm-ypv-bookmark-add-source-mark (name)
+  (cond ((window-system)
+         (cl-concatenate 'string " " "🔖" " "  name))
+        (t
+         name)))
+
+
 (defvar helm-source-ypv-bookmarks
-  '((name . "Bookmarks")
+  `((name . ,(helm-ypv-bookmark-add-source-mark "Bookmarks"))
     (init . helm-ypv-bookmark-init)
     (candidates . helm-ypv-candidate-bookmarks)
     (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
