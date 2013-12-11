@@ -13,7 +13,9 @@
     (dp  "dp.prgrssv.net")
     (hktv "games.himitsukichi.com/hktv")
     (turf-page "peercast.takami98.net/turf-page")
-    (oekaki "oekakiyp.appspot.com"))
+    (oekaki "oekakiyp.appspot.com")
+    (event "eventyp.xrea.jp")
+    (message "peercast.takami98.net/message-yp"))
   "Yellow Page urls"
   :type 'list
   :group 'helm-ypv)
