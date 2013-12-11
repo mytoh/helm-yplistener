@@ -73,10 +73,11 @@
 ;;;; Source
 
 (defun helm-ypv-channel-add-source-mark (name)
-  (cond ((window-system)
-         (cl-concatenate 'string " " "📺" " "  name))
-        (t
-         name)))
+  (cl-letf ((mark "📺"))
+    (cond ((window-system)
+           (cl-concatenate 'string " " mark " "  name))
+          (t
+           name))))
 
 (defvar helm-source-ypv-channels
   `((name . ,(helm-ypv-channel-add-source-mark "Channel list"))

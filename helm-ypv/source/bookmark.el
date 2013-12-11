@@ -179,10 +179,11 @@
         (helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
 (defun helm-ypv-bookmark-add-source-mark (name)
-  (cond ((window-system)
-         (cl-concatenate 'string " " "🔖" " "  name))
-        (t
-         name)))
+  (cl-letf ((mark "🔖"))
+    (cond ((window-system)
+           (cl-concatenate 'string " " mark " "  name))
+          (t
+           name))))
 
 
 (defvar helm-source-ypv-bookmarks
