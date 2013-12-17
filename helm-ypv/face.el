@@ -21,9 +21,9 @@
   "face for channel description"
   :group 'helm-ypv)
 
-(defface helm-ypv-url-face
+(defface helm-ypv-contact-face
   '((t :inherit font-lock-variable-name-face))
-  "face for channel url"
+  "face for channel contact url"
   :group 'helm-ypv)
 
 (defface helm-ypv-type-face

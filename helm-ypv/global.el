@@ -46,7 +46,7 @@
    :name (cl-second info)
    :id (cl-third info)
    :ip (cl-fourth info)
-   :url (cl-fifth info)
+   :contact (cl-fifth info)
    :genre (cl-sixth info)
    :desc (cl-seventh info)
    :bitrate (cl-tenth info)

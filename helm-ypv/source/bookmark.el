@@ -6,9 +6,11 @@
 (require 'dash)
 (require 's)
 ;;;;; Local
-(require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
+
+(autoload 'helm-ypv-get/parse-channels "helm-ypv/global")
+(autoload 'helm-ypv-player "helm-ypv/global")
 
 ;;;; Functions
 ;;;;; Utils
@@ -83,7 +85,7 @@
   (name "")
   (id "")
   (ip "")
-  (url "")
+  (contact "")
   (genre "")
   (desc "")
   (bitrate "")
@@ -98,7 +100,7 @@
    :name (ypv-channel-name channel)
    :id (ypv-channel-id channel)
    :ip (ypv-channel-ip channel)
-   :url (ypv-channel-url channel)
+   :contact (ypv-channel-contact channel)
    :genre (ypv-channel-genre channel)
    :desc (ypv-channel-desc channel)
    :bitrate (ypv-channel-bitrate channel)

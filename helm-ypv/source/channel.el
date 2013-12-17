@@ -9,9 +9,8 @@
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
-(require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
-
+(autoload 'helm-ypv-bookmark-action-add "helm-ypv/source/bookmark")
 
 ;;;; Channel
 (cl-defstruct (ypv-channel
@@ -20,7 +19,7 @@
   (name "")
   (id "")
   (ip "")
-  (url "")
+  (contact "")
   (genre "")
   (desc "")
   (bitrate "")
@@ -55,13 +54,13 @@
   (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name-face))
             (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre-face))
             (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc-face))
-            (url (helm-ypv-add-face (ypv-channel-url channel) 'helm-ypv-url-face))
+            (contact (helm-ypv-add-face (ypv-channel-contact channel) 'helm-ypv-contact-face))
             (type (helm-ypv-add-face (ypv-channel-type channel) 'helm-ypv-type-face))
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate-face))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time-face))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment-face)))
     (format "%-17.17s %s [%s] %s %s %s %s"
-            name desc comment genre url type time)))
+            name desc comment genre contact type time)))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
