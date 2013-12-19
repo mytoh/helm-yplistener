@@ -4,7 +4,9 @@
 ;;;;; Faces
 
 (cl-defun helm-ypv-add-face (str face)
-  (propertize str 'face face))
+  (if str
+      (propertize str 'face face)
+    ""))
 
 (defface helm-ypv-name-face
   '((t :inherit font-lock-type-face))

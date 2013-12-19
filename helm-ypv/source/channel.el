@@ -68,7 +68,6 @@
   (setq helm-ypv-channel-candidate-channels
         (helm-ypv-channel-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
-
 ;;;; Source
 
 (defun helm-ypv-channel-add-source-mark (name)
