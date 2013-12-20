@@ -1,4 +1,4 @@
-;;; helm-ypv.el --- yp viewer with helm
+;;; helm-ypv.el --- yp viewer with helm   -*- lexical-binding: t -*-
 
 ;;;; Commentary:
 
@@ -13,7 +13,6 @@
 
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
-
 (require 'helm-ypv-source-channel "helm-ypv/source/channel")
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 

@@ -1,5 +1,4 @@
-
-;;; face.el
+;;; face.el  -*- lexical-binding: t -*-
 
 ;;;;; Faces
 

@@ -1,5 +1,4 @@
-
-;;; global.el
+;;; global.el  -*- lexical-binding: t -*-
 
 ;;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el

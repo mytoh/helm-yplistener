@@ -1,5 +1,4 @@
-
-;;; user-variable.el
+;;; user-variable.el -*- lexical-binding: t -*-
 
 ;;;;; Group
 (defgroup helm-ypv nil

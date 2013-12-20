@@ -1,4 +1,4 @@
-;;; bookmark.el
+;;; bookmark.el -*- lexical-binding: t -*-
 
 ;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
