@@ -131,9 +131,9 @@
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
             (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
-                                                                      'helm-ypv-name-face
-                                                                    'font-lock-dcc-face)))
-            (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'helm-ypv-id-face)))
+                                                                      'helm-ypv-name
+                                                                    'font-lock-doc)))
+            (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'helm-ypv-id)))
     (format format-string
             name
             id)))

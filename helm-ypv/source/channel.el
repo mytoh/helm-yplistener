@@ -51,14 +51,14 @@
    channels))
 
 (cl-defun helm-ypv-channel-create-display-candidate (channel)
-  (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name-face))
-            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre-face))
-            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc-face))
-            (contact (helm-ypv-add-face (ypv-channel-contact channel) 'helm-ypv-contact-face))
-            (type (helm-ypv-add-face (ypv-channel-type channel) 'helm-ypv-type-face))
-            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate-face))
-            (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time-face))
-            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment-face)))
+  (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name))
+            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre))
+            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc))
+            (contact (helm-ypv-add-face (ypv-channel-contact channel) 'helm-ypv-contact))
+            (type (helm-ypv-add-face (ypv-channel-type channel) 'helm-ypv-type))
+            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
+            (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
+            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment)))
     (format "%-17.17s %s [%s] %s %s %s %s"
             name desc comment genre contact type time)))
 
