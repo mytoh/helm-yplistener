@@ -1,11 +1,13 @@
 ;;; face.el  -*- lexical-binding: t -*-
 
-;;;;; Faces
+;;;; Helper Function
 
 (cl-defun helm-ypv-add-face (str face)
   (if str
       (propertize str 'face face)
     ""))
+
+;;;; Faces
 
 (defface helm-ypv-name
   '((t :inherit font-lock-type-face))
@@ -52,5 +54,5 @@
   "face for channel id"
   :group 'helm-ypv)
 
-;;;;; Provide
+;;;; Provide
 (provide 'helm-ypv-face)
