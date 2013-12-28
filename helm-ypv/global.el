@@ -5,6 +5,7 @@
 (require 'helm)
 (require 'dash)
 (require 's)
+(require 'url)
 ;;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 
@@ -103,9 +104,8 @@
   (cl-letf ((content nil))
     (with-current-buffer buf
       (save-excursion
-        (goto-char (point-min))
-        (re-search-forward "^$" nil 'move)
-        (setq content (buffer-substring-no-properties (+ 1 (point)) (- (point-max) 1)))
+        (goto-char (+ 1 url-http-end-of-headers))
+        (setq content (buffer-substring-no-properties (point) (- (point-max) 1)))
         (kill-buffer (current-buffer))))
     (helm-ypv-string->utf-8 content)))
 
