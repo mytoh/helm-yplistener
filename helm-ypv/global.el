@@ -13,21 +13,6 @@
 (cl-defun helm-ypv-make-yp-index-url (info)
   (cl-concatenate 'string "http://" info "/" "index.txt"))
 
-(cl-defun helm-ypv-player (player url)
-  (cl-case player
-    (mplayer2
-     (helm-ypv-player-mplayer2 url))))
-
-(cl-defun helm-ypv-player-mplayer2 (url)
-  (message url)
-  (cl-letf ((command (cl-concatenate 'string
-                                     "mplayer --playlist="
-                                     "'" url "'"
-                                     " --softvol --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
-                                     " &" )))
-    (message command)
-    (start-process-shell-command "ypv" nil command)))
-
 (cl-defun helm-ypv-parse-channels (info)
   (cl-letf* ((yp-name (car info))
              (content (cadr info))

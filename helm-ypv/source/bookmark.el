@@ -7,6 +7,7 @@
 (require 's)
 ;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
+(require 'helm-ypv-player "helm-ypv/player")
 (require 'helm-ypv-face "helm-ypv/face")
 
 (autoload 'helm-ypv-get/parse-channels "helm-ypv/global")

@@ -9,6 +9,7 @@
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
+(require 'helm-ypv-player "helm-ypv/player")
 
 (autoload 'helm-ypv-bookmark-action-add "helm-ypv/source/bookmark")
 
