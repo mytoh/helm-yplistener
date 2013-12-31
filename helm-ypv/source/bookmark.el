@@ -86,12 +86,6 @@
   (id "")
   (ip "")
   (contact "")
-  (genre "")
-  (desc "")
-  (bitrate "")
-  (type "")
-  (time "")
-  (comment "")
   (broadcasting nil))
 
 (cl-defun helm-ypv-bookmark-channel->bookmark (channel)
@@ -101,12 +95,6 @@
    :id (ypv-channel-id channel)
    :ip (ypv-channel-ip channel)
    :contact (ypv-channel-contact channel)
-   :genre (ypv-channel-genre channel)
-   :desc (ypv-channel-desc channel)
-   :bitrate (ypv-channel-bitrate channel)
-   :type (ypv-channel-type channel)
-   :time (ypv-channel-time  channel)
-   :comment (ypv-channel-comment channel)
    :broadcasting nil))
 
 
