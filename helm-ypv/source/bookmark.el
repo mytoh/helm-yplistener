@@ -121,7 +121,7 @@
   (cl-letf ((format-string "%-17.17s %s")
             (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
                                                                       'helm-ypv-name
-                                                                    'font-lock-doc)))
+                                                                    'font-lock-comment-face)))
             (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'helm-ypv-id)))
     (format format-string
             name
