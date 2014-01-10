@@ -68,7 +68,9 @@
 
 (cl-defun helm-ypv-bookmark-data-channel-exists-p (file bkm)
   (cl-find bkm (helm-ypv-bookmark-data-read file)
-           :test #'equal))
+
+
+           :test 'equal))
 
 (cl-defun helm-ypv-bookmark-data-read (file)
   (with-temp-buffer
@@ -128,19 +130,19 @@
             id)))
 
 (cl-defun helm-ypv-bookmark-channel-broadcasting-p (bookmark channels)
-  (cl-find-if #'(lambda (channel)
-                  (equal (ypv-bookmark-id bookmark)
-                         (ypv-channel-id channel)))
+  (cl-find-if (lambda (channel)
+                (equal (ypv-bookmark-id bookmark)
+                       (ypv-channel-id channel)))
               channels))
 
 (cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)
   (cl-remove-if
-   #'(lambda (b) (eq b nil))
+   (lambda (b) (eq b nil))
    (cl-map 'list
-           #'(lambda (bookmark)
-               (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
-                   (helm-ypv-bookmark-set-broadcasting bookmark t)
-                 (helm-ypv-bookmark-set-broadcasting bookmark nil)))
+           (lambda (bookmark)
+             (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
+                 (helm-ypv-bookmark-set-broadcasting bookmark t)
+               (helm-ypv-bookmark-set-broadcasting bookmark nil)))
            bookmarks)))
 
 (cl-defun helm-ypv-bookmark-set-broadcasting (obj value)
@@ -151,12 +153,12 @@
   (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
       '()
     (-map
-     #'(lambda (bookmark)
-         (cons
-          ;; display candidate
-          (helm-ypv-bookmark-create-display-candidate bookmark)
-          ;; real candidate
-          bookmark))
+     (lambda (bookmark)
+       (cons
+        ;; display candidate
+        (helm-ypv-bookmark-create-display-candidate bookmark)
+        ;; real candidate
+        bookmark))
      (helm-ypv-bookmark-find-broadcasting-channels
       (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
       channels))))

@@ -18,11 +18,11 @@
              (content (cadr info))
              (channels (split-string content "\n")))
     (-map
-     #'(lambda (x)
-         (helm-ypv-info->channel
-          (cl-concatenate 'list
-                          (list yp-name)
-                          (split-string x "<>"))))
+     (lambda (x)
+       (helm-ypv-info->channel
+        (cl-concatenate 'list
+                        (list yp-name)
+                        (split-string x "<>"))))
      channels)))
 
 (cl-defun helm-ypv-info->channel (info)
@@ -81,7 +81,7 @@
 
 (cl-defun helm-ypv-get-channels (yp-info)
   (-map
-   #'helm-ypv-get-channel
+   'helm-ypv-get-channel
    yp-info))
 
 (cl-defun helm-ypv-remove-http-header (buf)
@@ -104,7 +104,7 @@
 
 (cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
-   #'helm-ypv-parse-channels
+   'helm-ypv-parse-channels
    (cl-remove nil (helm-ypv-get-channels yp-infos))))
 
 

@@ -43,12 +43,12 @@
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
   (-map
-   #'(lambda (info)
-       (cons
-        ;; display candidate
-        (helm-ypv-channel-create-display-candidate info)
-        ;; real candidate
-        info))
+   (lambda (info)
+     (cons
+      ;; display candidate
+      (helm-ypv-channel-create-display-candidate info)
+      ;; real candidate
+      info))
    channels))
 
 (cl-defun helm-ypv-channel-create-display-candidate (channel)
