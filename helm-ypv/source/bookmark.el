@@ -21,9 +21,13 @@
           (ypv-bookmark-id bkm)
           (ypv-bookmark-ip bkm)))
 
-(cl-defun helm-ypv-bookmark-compare-id (bmk1 bmk2)
+(cl-defun helm-ypv-bookmark-equal-id (bmk1 bmk2)
   (equal (ypv-bookmark-id bmk1)
          (ypv-bookmark-id bmk2)))
+
+(cl-defun helm-ypv-bookmark-equal-name (bmk1 bmk2)
+  (equal (ypv-bookmark-name bmk1)
+         (ypv-bookmark-name bmk2)))
 
 ;;;;; Bookmark Data
 
@@ -48,7 +52,7 @@
 (cl-defun helm-ypv-bookmark-data-update (file data)
   (cl-letf ((old (cl-remove-if
                   (lambda (old-bookmark)
-                    (helm-ypv-bookmark-compare-id
+                    (helm-ypv-bookmark-equal-name
                      old-bookmark data))
                   (helm-ypv-bookmark-data-read file))))
     (message "updating bookmark")
@@ -61,16 +65,14 @@
     (helm-ypv-bookmark-data-write file
                                   (cl-remove-if
                                    (lambda (old-bookmark)
-                                     (helm-ypv-bookmark-compare-id
+                                     (helm-ypv-bookmark-equal-name
                                       old-bookmark bookmark))
                                    old))
     (message (format "removed %s" bookmark))))
 
 (cl-defun helm-ypv-bookmark-data-channel-exists-p (file bkm)
   (cl-find bkm (helm-ypv-bookmark-data-read file)
-
-
-           :test 'equal))
+           :test 'helm-ypv-bookmark-equal-name))
 
 (cl-defun helm-ypv-bookmark-data-read (file)
   (with-temp-buffer
