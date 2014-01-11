@@ -7,7 +7,7 @@
 ;;;;;; General
 
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
-(autoload 'helm "helm")
+(require 'helm)
 
 ;;;;;; Local library
 

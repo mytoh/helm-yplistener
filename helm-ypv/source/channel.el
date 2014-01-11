@@ -60,8 +60,9 @@
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment)))
-    (format "%-17.17s %s [%s] %s %s %s %s"
-            name desc comment genre contact type time)))
+    (format "%-17.17s %s %s %s %s %s %s"
+            name desc (if (string-empty-p comment) "" comment)
+            genre contact type time)))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
