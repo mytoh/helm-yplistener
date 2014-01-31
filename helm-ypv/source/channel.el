@@ -11,7 +11,7 @@
 (require 'helm-ypv-face "helm-ypv/face")
 (require 'helm-ypv-player "helm-ypv/player")
 
-(autoload 'helm-ypv-bookmark-action-add "helm-ypv/source/bookmark")
+(require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Channel
 (cl-defstruct (ypv-channel
@@ -29,9 +29,11 @@
   (comment ""))
 
 ;;;; Action
-(cl-defun helm-ypv-channel-action-open-channel (candidate)
-  (cl-letf* ((info candidate)
+(cl-defun helm-ypv-channel-action-open-channel (_candidate)
+  (cl-letf* ((info _candidate)
              (url (helm-ypv-channel-make-url info)))
+    (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))
+      (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark))
     (helm-ypv-player helm-ypv-player-type url)))
 
 (cl-defun helm-ypv-channel-make-url (channel)
@@ -73,7 +75,7 @@
 ;;;; Source
 
 (defun helm-ypv-channel-add-source-mark (name)
-  (cl-letf ((mark "📺"))
+  (cl-letf ((mark "📺")) ; "\U0001F4FA"
     (cond ((window-system)
            (cl-concatenate 'string " " mark " "  name))
           (t
