@@ -50,13 +50,14 @@
     (message (format "added %s" data))))
 
 (cl-defun helm-ypv-bookmark-data-update (file data)
-  (cl-letf ((old (cl-remove-if
-                  (lambda (old-bookmark)
-                    (helm-ypv-bookmark-equal-name
-                     old-bookmark data))
-                  (helm-ypv-bookmark-data-read file))))
+  (cl-letf* ((old (helm-ypv-bookmark-data-read file))
+             (new (cl-remove-if
+                   (lambda (old-bookmark)
+                     (helm-ypv-bookmark-equal-name
+                      old-bookmark data))
+                   old)))
     (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list data)))
+    (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list data)))
     (message (format "update to add %s" data))))
 
 (cl-defun helm-ypv-bookmark-data-remove (file bookmark)
@@ -105,13 +106,15 @@
 
 ;;;;; Action
 
-(cl-defun helm-ypv-bookmark-action-add (candidate)
-  (cl-letf* ((info (helm-ypv-bookmark-channel->bookmark candidate)))
-    (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file) info)))
+(cl-defun helm-ypv-bookmark-action-add (_candidate)
+  (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark _candidate)))
+    (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file) bookmark)))
 
-(cl-defun helm-ypv-bookmark-action-remove (candidate)
-  (cl-letf* ((info candidate))
-    (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) info)))
+(cl-defun helm-ypv-bookmark-action-remove (_candidate)
+  (cl-letf ((bookmark _candidate))
+    (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) bookmark)))
+
+
 
 (cl-defun helm-ypv-bookmark-action-open-channel (candidate)
   (cl-letf* ((bookmark candidate)
@@ -174,12 +177,11 @@
         (helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
 (defun helm-ypv-bookmark-add-source-mark (name)
-  (cl-letf ((mark "🔖"))
+  (cl-letf ((mark "🔖" )) ; "\U0001F516"
     (cond ((window-system)
            (cl-concatenate 'string " " mark " "  name))
           (t
            name))))
-
 
 (defvar helm-source-ypv-bookmarks
   `((name . ,(helm-ypv-bookmark-add-source-mark "Bookmarks"))
