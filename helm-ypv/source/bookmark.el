@@ -56,9 +56,12 @@
                      (helm-ypv-bookmark-equal-name
                       old-bookmark data))
                    old)))
-    (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list data)))
-    (message (format "update to add %s" data))))
+    (if (helm-ypv-bookmark-data-channel-exists-p file data)
+        (progn
+          (message "updating bookmark")
+          (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list data)))
+          (message (format "update to add %s" data)))
+      (message "channel not found on bookmark"))))
 
 (cl-defun helm-ypv-bookmark-data-remove (file bookmark)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
