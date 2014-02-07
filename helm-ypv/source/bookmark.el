@@ -3,8 +3,6 @@
 ;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
-(require 'dash)
-(require 's)
 ;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-player "helm-ypv/player")
@@ -160,7 +158,7 @@
 (cl-defun helm-ypv-bookmark-create-candidates (channels)
   (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
       '()
-    (-map
+    (cl-mapcar
      (lambda (bookmark)
        (cons
         ;; display candidate

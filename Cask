@@ -3,7 +3,6 @@
 (package "helm-ypv" "0.0.1" "yp viewer with helm interface")
 
 (depends-on "helm")
-(depends-on "dash")
 (depends-on "s")
 
 (development

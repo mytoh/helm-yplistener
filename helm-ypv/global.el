@@ -3,7 +3,6 @@
 ;;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
-(require 'dash)
 (require 's)
 (require 'url)
 ;;;;;; Local
@@ -17,7 +16,7 @@
   (cl-letf* ((yp-name (car info))
              (content (cadr info))
              (channels (split-string content "\n")))
-    (-map
+    (cl-mapcar
      (lambda (x)
        (helm-ypv-info->channel
         (cl-concatenate 'list
@@ -80,7 +79,7 @@
       nil)))
 
 (cl-defun helm-ypv-get-channels (yp-info)
-  (-map
+  (cl-mapcar
    'helm-ypv-get-channel
    yp-info))
 

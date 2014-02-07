@@ -3,8 +3,6 @@
 ;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
-(require 'dash)
-(require 's)
 ;;;;; Local
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
@@ -44,7 +42,7 @@
 
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
-  (-map
+  (cl-mapcar
    (lambda (info)
      (cons
       ;; display candidate
