@@ -86,23 +86,40 @@
 
 ;;;;; Bookmark Info
 
-(cl-defstruct (ypv-bookmark
-               (:constructor ypv-bookmark-new))
-  (yp "")
-  (name "")
-  (id "")
-  (ip "")
-  (contact "")
-  (broadcasting nil))
+(defclass ypv-bookmark ()
+  ((yp :initarg :yp
+       :type string
+       :initform ""
+       :accessor ypv-bookmark-yp)
+   (name :initarg :name
+         :type string
+         :initform ""
+         :accessor ypv-bookmark-name)
+   (id :initarg :id
+       :type string
+       :initform ""
+       :accessor ypv-bookmark-id)
+   (ip :initarg :ip
+       :type string
+       :initform ""
+       :accessor ypv-bookmark-ip)
+   (contact :initarg :contact
+            :type string
+            :initform ""
+            :accessor ypv-bookmark-contact)
+   (broadcasting :initarg :broadcasting
+                 :initform nil
+                 :type symbol
+                 :accessor ypv-bookmark-broadcasting)))
 
 (cl-defun helm-ypv-bookmark-channel->bookmark (channel)
-  (ypv-bookmark-new
-   :yp (ypv-channel-yp channel)
-   :name (ypv-channel-name channel)
-   :id (ypv-channel-id channel)
-   :ip (ypv-channel-ip channel)
-   :contact (ypv-channel-contact channel)
-   :broadcasting nil))
+  (make-instance 'ypv-bookmark
+                 :yp (ypv-channel-yp channel)
+                 :name (ypv-channel-name channel)
+                 :id (ypv-channel-id channel)
+                 :ip (ypv-channel-ip channel)
+                 :contact (ypv-channel-contact channel)
+                 :broadcasting nil))
 
 
 ;;;;; Action

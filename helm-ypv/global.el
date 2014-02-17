@@ -25,19 +25,19 @@
      channels)))
 
 (cl-defun helm-ypv-info->channel (info)
-  (ypv-channel-new
-   :yp (symbol-name (cl-first info))
-   :name (cl-second info)
-   :id (cl-third info)
-   :ip (cl-fourth info)
-   :contact (cl-fifth info)
-   :genre (cl-sixth info)
-   :desc (cl-seventh info)
-   :bitrate (cl-tenth info)
-   :type (cl-nth-value 10 info)
-   :time (cl-nth-value 16 info)
-   :comment (cl-nth-value 18 info)
-   ))
+  (make-instance 'ypv-channel
+                 :yp (symbol-name (cl-first info))
+                 :name (cl-second info)
+                 :id (cl-third info)
+                 :ip (cl-fourth info)
+                 :contact (cl-fifth info)
+                 :genre (cl-sixth info)
+                 :desc (cl-seventh info)
+                 :bitrate (cl-tenth info)
+                 :type (cl-nth-value 10 info)
+                 :time (cl-nth-value 16 info)
+                 :comment (cl-nth-value 18 info)
+                 ))
 
 
 (cl-defun helm-ypv-replace-html-entities (str)

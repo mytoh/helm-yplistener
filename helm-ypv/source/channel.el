@@ -12,19 +12,52 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Channel
-(cl-defstruct (ypv-channel
-               (:constructor ypv-channel-new))
-  (yp "")
-  (name "")
-  (id "")
-  (ip "")
-  (contact "")
-  (genre "")
-  (desc "")
-  (bitrate "")
-  (type "")
-  (time "")
-  (comment ""))
+
+(defclass ypv-channel ()
+  ((yp :initarg :yp
+       :type string
+       :initform ""
+       :accessor ypv-channel-yp)
+   (name :initarg :name
+         :type string
+         :initform ""
+         :accessor ypv-channel-name)
+   (id :initarg :id
+       :type string
+       :initform ""
+       :accessor ypv-channel-id)
+   (ip :initarg :ip
+       :type string
+       :initform ""
+       :accessor ypv-channel-ip)
+   (contact :initarg :contact
+            :type string
+            :initform ""
+            :accessor ypv-channel-contact)
+   (genre :initarg :genre
+          :type string
+          :initform ""
+          :accessor ypv-channel-genre
+          )
+   (desc :initarg :desc
+         :type string
+         :initform ""
+         :accessor ypv-channel-desc)
+   (bitrate :initarg :bitrate
+            :initform  ""
+            :accessor ypv-channel-bitrate)
+   (type :initarg :type
+         :initform ""
+         :type string
+         :accessor ypv-channel-type)
+   (time :initarg :time
+         :initform ""
+         :type string
+         :accessor ypv-channel-time)
+   (comment :initarg :comment
+            :initform ""
+            :type string
+            :accessor ypv-channel-comment)))
 
 ;;;; Action
 (cl-defun helm-ypv-channel-action-open-channel (_candidate)
