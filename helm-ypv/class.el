@@ -2,77 +2,30 @@
 
 ;;;;; Bookmark Info
 
-(defclass ypv-bookmark ()
-  ((yp :initarg :yp
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-yp)
-   (name :initarg :name
-         :type string
-         :initform ""
-         :accessor ypv-bookmark-name)
-   (id :initarg :id
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-id)
-   (ip :initarg :ip
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-ip)
-   (contact :initarg :contact
-            :type string
-            :initform ""
-            :accessor ypv-bookmark-contact)
-   (broadcasting :initarg :broadcasting
+(cl-defmacro ypv-defclass (name slots)
+  `(defclass ,name ()
+     ,(mapcar
+       (lambda (s)
+         (if (listp s)
+             (list (car s)
+                   :initarg (intern (concat ":" (symbol-name (car s))))
+                   :initform (cadr s)
+                   :accessor (intern (concat (symbol-name name) "-" (symbol-name (car s)))))
+           (list s
+                 :initarg (intern (concat ":" (symbol-name s)))
                  :initform nil
-                 :type symbol
-                 :accessor ypv-bookmark-broadcasting)))
+                 :accessor (intern (concat (symbol-name name) "-"
+                                           (symbol-name
+                                            s))))))
+       slots)))
 
-(defclass ypv-channel ()
-  ((yp :initarg :yp
-       :type string
-       :initform ""
-       :accessor ypv-channel-yp)
-   (name :initarg :name
-         :type string
-         :initform ""
-         :accessor ypv-channel-name)
-   (id :initarg :id
-       :type string
-       :initform ""
-       :accessor ypv-channel-id)
-   (ip :initarg :ip
-       :type string
-       :initform ""
-       :accessor ypv-channel-ip)
-   (contact :initarg :contact
-            :type string
-            :initform ""
-            :accessor ypv-channel-contact)
-   (genre :initarg :genre
-          :type string
-          :initform ""
-          :accessor ypv-channel-genre
-          )
-   (desc :initarg :desc
-         :type string
-         :initform ""
-         :accessor ypv-channel-desc)
-   (bitrate :initarg :bitrate
-            :initform  ""
-            :accessor ypv-channel-bitrate)
-   (type :initarg :type
-         :initform ""
-         :type string
-         :accessor ypv-channel-type)
-   (time :initarg :time
-         :initform ""
-         :type string
-         :accessor ypv-channel-time)
-   (comment :initarg :comment
-            :initform ""
-            :type string
-            :accessor ypv-channel-comment)))
+(ypv-defclass ypv-bookmark
+              ((yp "") (name "") (id "") (ip "") (contact "") broadcasting))
+
+(ypv-defclass ypv-channel
+              ((yp "") (name "") (id "") (ip "") (contact "") (genre "") (desc "")
+               (bitrate "") (type "") (time "") (comment "") broadcasting))
+
 
 (provide 'helm-ypv-class)
 
