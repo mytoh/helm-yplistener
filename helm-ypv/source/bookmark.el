@@ -96,7 +96,6 @@
                  :contact (ypv-channel-contact channel)
                  :broadcasting nil))
 
-
 ;;;;; Action
 
 (cl-defun helm-ypv-bookmark-action-add (_candidate)
@@ -115,11 +114,12 @@
 
 ;;;;; Candidate
 
-(defmethod helm-ypv-bookmark-create-display-candidate ((bookmark ypv-bookmark))
+(defmethod helm-ypv-create-display-candidate ((bookmark ypv-bookmark))
   (cl-letf ((format-string "%-17.17s %s")
-            (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
-                                                                      'helm-ypv-name
-                                                                    'font-lock-comment-face)))
+            (name (helm-ypv-add-face (ypv-bookmark-name bookmark)
+                                     (if (ypv-bookmark-broadcasting bookmark)
+                                         'helm-ypv-name
+                                       'font-lock-comment-face)))
             (id (helm-ypv-add-face (ypv-bookmark-id bookmark) 'helm-ypv-id)))
     (format format-string
             name
@@ -152,7 +152,7 @@
      (lambda (bookmark)
        (cons
         ;; display candidate
-        (helm-ypv-bookmark-create-display-candidate bookmark)
+        (helm-ypv-create-display-candidate bookmark)
         ;; real candidate
         bookmark))
      (helm-ypv-bookmark-find-broadcasting-channels

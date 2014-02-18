@@ -32,12 +32,12 @@
    (lambda (info)
      (cons
       ;; display candidate
-      (helm-ypv-channel-create-display-candidate info)
+      (helm-ypv-create-display-candidate info)
       ;; real candidate
       info))
    channels))
 
-(defmethod helm-ypv-channel-create-display-candidate ((channel ypv-channel))
+(defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
   (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name))
             (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre))
             (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc))

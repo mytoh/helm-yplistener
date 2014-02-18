@@ -24,6 +24,13 @@
                         (split-string x "<>"))))
      channels)))
 
+(cl-defun helm-ypv-message (fmt &rest text)
+  (apply 'message (format "[%s] %s"
+                          (propertize "helm-ypv"
+                                      'face '(:foreground "#539b8f"))
+                          fmt)
+         text))
+
 (cl-defun helm-ypv-info->channel (info)
   (make-instance 'ypv-channel
                  :yp (symbol-name (cl-first info))
@@ -36,9 +43,7 @@
                  :bitrate (cl-tenth info)
                  :type (cl-nth-value 10 info)
                  :time (cl-nth-value 16 info)
-                 :comment (cl-nth-value 18 info)
-                 ))
-
+                 :comment (cl-nth-value 18 info)))
 
 (cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
@@ -60,15 +65,13 @@
       (helm-ypv-replace-html-entites-helper
        (cdr lst) rep-str))))
 
-
 (cl-defun helm-ypv-url-retrieve (url)
-  (cl-letf ((res (-> url
-                   url-retrieve-synchronously
-                   helm-ypv-remove-http-header)))
+  (helm-ypv-message "get %s" url)
+  (cl-letf ((res (helm-ypv-remove-http-header
+                  (url-retrieve-synchronously url t))))
     (if (helm-ypv-empty-response-p res)
         nil
       (helm-ypv-replace-html-entities res))))
-
 
 (cl-defun helm-ypv-get-channel (info)
   (cl-letf ((res (-> (cadr info)
