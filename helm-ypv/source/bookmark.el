@@ -43,31 +43,31 @@
     (cl-letf ((standard-output (current-buffer)))
       (prin1 data))))
 
-(cl-defun helm-ypv-bookmark-data-add (file data)
+(defmethod helm-ypv-bookmark-data-add ((bookmark ypv-bookmark) file)
   (if (file-exists-p file)
-      (if (helm-ypv-bookmark-data-channel-exists-p file data)
-          (helm-ypv-bookmark-data-update file data)
-        (helm-ypv-bookmark-data-append file data))
-    (helm-ypv-bookmark-data-write file (list data))))
+      (if (helm-ypv-bookmark-data-channel-exists-p file bookmark)
+          (helm-ypv-bookmark-data-update bookmark file)
+        (helm-ypv-bookmark-data-append bookmark file))
+    (helm-ypv-bookmark-data-write file (list bookmark))))
 
-(cl-defun helm-ypv-bookmark-data-append (file data)
+(defmethod helm-ypv-bookmark-data-append ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list data)))
-    (message (format "added %s" data))))
+    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list bookmark)))
+    (message (format "added %s" bookmark))))
 
-(cl-defun helm-ypv-bookmark-data-update (file data)
+(defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
   (cl-letf* ((old-bookmarks (helm-ypv-bookmark-data-read file))
              (new (helm-ypv-bookmark-remove-if-name
-                   data old-bookmarks)))
-    (if (helm-ypv-bookmark-data-channel-exists-p file data)
+                   bookmark old-bookmarks)))
+    (if (helm-ypv-bookmark-data-channel-exists-p file bookmark)
         (progn
           (message "updating bookmark")
-          (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list data)))
-          (message (format "update to add %s" data)))
+          (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list bookmark)))
+          (message (format "update to add %s" bookmark)))
       (message "channel not found on bookmark"))))
 
-(cl-defun helm-ypv-bookmark-data-remove (file bookmark)
+(defmethod helm-ypv-bookmark-data-remove ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "removing bookmark")
     (helm-ypv-bookmark-data-write file
@@ -101,16 +101,16 @@
 
 (defmethod helm-ypv-bookmark-action-add ((_candidate ypv-channel))
   (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark _candidate)))
-    (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file) bookmark)))
+    (helm-ypv-bookmark-data-add bookmark (helm-ypv-bookmark-data-file))))
 
 (defmethod helm-ypv-bookmark-action-remove ((_candidate ypv-bookmark))
   (cl-letf ((bookmark _candidate))
-    (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) bookmark)))
+    (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file))))
 
 (defmethod helm-ypv-bookmark-action-open-channel ((candidate ypv-bookmark))
   (cl-letf* ((bookmark candidate)
              (url (helm-ypv-make-url bookmark)))
-    (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark)
+    (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file))
     (helm-ypv-player helm-ypv-player-type url)))
 
 ;;;;; Candidate
