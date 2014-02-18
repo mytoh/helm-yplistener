@@ -16,10 +16,10 @@
 ;;;; Functions
 ;;;;; Utils
 (defmethod helm-ypv-make-url ((bkm ypv-bookmark))
-  (format "http://%s/pls/%s?tip=%s"
-          helm-ypv-local-address
-          (ypv-bookmark-id bkm)
-          (ypv-bookmark-ip bkm)))
+  (with-slots (id ip) bkm
+    (format "http://%s/pls/%s?tip=%s"
+            helm-ypv-local-address
+            id ip)))
 
 (cl-defun helm-ypv-bookmark-equal-id (bmk1 bmk2)
   (equal (ypv-bookmark-id bmk1)
