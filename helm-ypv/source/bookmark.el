@@ -4,6 +4,7 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 ;;;;; Local
+(require 'helm-ypv-class "helm-ypv/class")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-player "helm-ypv/player")
 (require 'helm-ypv-face "helm-ypv/face")
@@ -11,9 +12,10 @@
 (autoload 'helm-ypv-get/parse-channels "helm-ypv/global")
 (autoload 'helm-ypv-player "helm-ypv/global")
 
+
 ;;;; Functions
 ;;;;; Utils
-(cl-defun helm-ypv-bookmark-make-url (bkm)
+(defmethod helm-ypv-bookmark-make-url ((bkm ypv-bookmark))
   (format "http://%s/pls/%s?tip=%s"
           helm-ypv-local-address
           (ypv-bookmark-id bkm)
@@ -84,35 +86,8 @@
 (cl-defun helm-ypv-bookmark-data-file ()
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
-;;;;; Bookmark Info
 
-(defclass ypv-bookmark ()
-  ((yp :initarg :yp
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-yp)
-   (name :initarg :name
-         :type string
-         :initform ""
-         :accessor ypv-bookmark-name)
-   (id :initarg :id
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-id)
-   (ip :initarg :ip
-       :type string
-       :initform ""
-       :accessor ypv-bookmark-ip)
-   (contact :initarg :contact
-            :type string
-            :initform ""
-            :accessor ypv-bookmark-contact)
-   (broadcasting :initarg :broadcasting
-                 :initform nil
-                 :type symbol
-                 :accessor ypv-bookmark-broadcasting)))
-
-(cl-defun helm-ypv-bookmark-channel->bookmark (channel)
+(defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
   (make-instance 'ypv-bookmark
                  :yp (ypv-channel-yp channel)
                  :name (ypv-channel-name channel)
@@ -132,8 +107,6 @@
   (cl-letf ((bookmark _candidate))
     (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) bookmark)))
 
-
-
 (cl-defun helm-ypv-bookmark-action-open-channel (candidate)
   (cl-letf* ((bookmark candidate)
              (url (helm-ypv-bookmark-make-url bookmark)))
@@ -142,7 +115,7 @@
 
 ;;;;; Candidate
 
-(cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
+(defmethod helm-ypv-bookmark-create-display-candidate ((bookmark ypv-bookmark))
   (cl-letf ((format-string "%-17.17s %s")
             (name (helm-ypv-add-face (ypv-bookmark-name bookmark) (if (ypv-bookmark-broadcasting bookmark)
                                                                       'helm-ypv-name
@@ -152,7 +125,7 @@
             name
             id)))
 
-(cl-defun helm-ypv-bookmark-channel-broadcasting-p (bookmark channels)
+(defmethod helm-ypv-bookmark-channel-broadcasting-p ((bookmark ypv-bookmark) channels)
   (cl-find-if (lambda (channel)
                 (equal (ypv-bookmark-id bookmark)
                        (ypv-channel-id channel)))
@@ -168,7 +141,7 @@
                (helm-ypv-bookmark-set-broadcasting bookmark nil)))
            bookmarks)))
 
-(cl-defun helm-ypv-bookmark-set-broadcasting (obj value)
+(defmethod helm-ypv-bookmark-set-broadcasting ((obj ypv-bookmark) value)
   (setf (ypv-bookmark-broadcasting obj) value)
   obj)
 

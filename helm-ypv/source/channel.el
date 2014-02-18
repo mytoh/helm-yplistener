@@ -4,60 +4,13 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 ;;;;; Local
+(require 'helm-ypv-class "helm-ypv/class")
 (require 'helm-ypv-global "helm-ypv/global")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
 (require 'helm-ypv-player "helm-ypv/player")
 
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
-
-;;;; Channel
-
-(defclass ypv-channel ()
-  ((yp :initarg :yp
-       :type string
-       :initform ""
-       :accessor ypv-channel-yp)
-   (name :initarg :name
-         :type string
-         :initform ""
-         :accessor ypv-channel-name)
-   (id :initarg :id
-       :type string
-       :initform ""
-       :accessor ypv-channel-id)
-   (ip :initarg :ip
-       :type string
-       :initform ""
-       :accessor ypv-channel-ip)
-   (contact :initarg :contact
-            :type string
-            :initform ""
-            :accessor ypv-channel-contact)
-   (genre :initarg :genre
-          :type string
-          :initform ""
-          :accessor ypv-channel-genre
-          )
-   (desc :initarg :desc
-         :type string
-         :initform ""
-         :accessor ypv-channel-desc)
-   (bitrate :initarg :bitrate
-            :initform  ""
-            :accessor ypv-channel-bitrate)
-   (type :initarg :type
-         :initform ""
-         :type string
-         :accessor ypv-channel-type)
-   (time :initarg :time
-         :initform ""
-         :type string
-         :accessor ypv-channel-time)
-   (comment :initarg :comment
-            :initform ""
-            :type string
-            :accessor ypv-channel-comment)))
 
 ;;;; Action
 (cl-defun helm-ypv-channel-action-open-channel (_candidate)
@@ -67,7 +20,7 @@
       (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark))
     (helm-ypv-player helm-ypv-player-type url)))
 
-(cl-defun helm-ypv-channel-make-url (channel)
+(defmethod helm-ypv-channel-make-url ((channel ypv-channel))
   (format "http://%s/pls/%s?tip=%s"
           helm-ypv-local-address
           (ypv-channel-id channel)
@@ -84,7 +37,7 @@
       info))
    channels))
 
-(cl-defun helm-ypv-channel-create-display-candidate (channel)
+(defmethod helm-ypv-channel-create-display-candidate ((channel ypv-channel))
   (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name))
             (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre))
             (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc))
