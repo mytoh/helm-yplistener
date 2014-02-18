@@ -15,12 +15,12 @@
 ;;;; Action
 (defmethod helm-ypv-channel-action-open-channel ((_candidate ypv-channel))
   (cl-letf* ((info _candidate)
-             (url (helm-ypv-channel-make-url info)))
+             (url (helm-ypv-make-url info)))
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))
       (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark))
     (helm-ypv-player helm-ypv-player-type url)))
 
-(defmethod helm-ypv-channel-make-url ((channel ypv-channel))
+(defmethod helm-ypv-make-url ((channel ypv-channel))
   (format "http://%s/pls/%s?tip=%s"
           helm-ypv-local-address
           (ypv-channel-id channel)

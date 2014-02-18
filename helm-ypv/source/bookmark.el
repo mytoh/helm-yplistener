@@ -15,7 +15,7 @@
 
 ;;;; Functions
 ;;;;; Utils
-(defmethod helm-ypv-bookmark-make-url ((bkm ypv-bookmark))
+(defmethod helm-ypv-make-url ((bkm ypv-bookmark))
   (format "http://%s/pls/%s?tip=%s"
           helm-ypv-local-address
           (ypv-bookmark-id bkm)
@@ -28,6 +28,13 @@
 (cl-defun helm-ypv-bookmark-equal-name (bmk1 bmk2)
   (equal (ypv-bookmark-name bmk1)
          (ypv-bookmark-name bmk2)))
+
+(cl-defun helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
+  (cl-remove-if
+   (lambda (old-bookmark)
+     (helm-ypv-bookmark-equal-name
+      old-bookmark new-bookmark))
+   bookmarks))
 
 ;;;;; Bookmark Data
 
@@ -50,12 +57,9 @@
     (message (format "added %s" data))))
 
 (cl-defun helm-ypv-bookmark-data-update (file data)
-  (cl-letf* ((old (helm-ypv-bookmark-data-read file))
-             (new (cl-remove-if
-                   (lambda (old-bookmark)
-                     (helm-ypv-bookmark-equal-name
-                      old-bookmark data))
-                   old)))
+  (cl-letf* ((old-bookmarks (helm-ypv-bookmark-data-read file))
+             (new (helm-ypv-bookmark-remove-if-name
+                   data old-bookmarks)))
     (if (helm-ypv-bookmark-data-channel-exists-p file data)
         (progn
           (message "updating bookmark")
@@ -67,11 +71,8 @@
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "removing bookmark")
     (helm-ypv-bookmark-data-write file
-                                  (cl-remove-if
-                                   (lambda (old-bookmark)
-                                     (helm-ypv-bookmark-equal-name
-                                      old-bookmark bookmark))
-                                   old))
+                                  (helm-ypv-bookmark-remove-if-name
+                                   bookmark old))
     (message (format "removed %s" bookmark))))
 
 (cl-defun helm-ypv-bookmark-data-channel-exists-p (file bkm)
@@ -108,7 +109,7 @@
 
 (defmethod helm-ypv-bookmark-action-open-channel ((candidate ypv-bookmark))
   (cl-letf* ((bookmark candidate)
-             (url (helm-ypv-bookmark-make-url bookmark)))
+             (url (helm-ypv-make-url bookmark)))
     (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark)
     (helm-ypv-player helm-ypv-player-type url)))
 

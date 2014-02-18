@@ -20,11 +20,26 @@
        slots)))
 
 (ypv-defclass ypv-bookmark
-              ((yp "") (name "") (id "") (ip "") (contact "") broadcasting))
+              ((yp "")
+               (name "")
+               (id "")
+               (ip "")
+               (contact "")
+               broadcasting))
 
 (ypv-defclass ypv-channel
-              ((yp "") (name "") (id "") (ip "") (contact "") (genre "") (desc "")
-               (bitrate "") (type "") (time "") (comment "") broadcasting))
+              ((yp "")
+               (name "")
+               (id "")
+               (ip "")
+               (contact "")
+               (genre "")
+               (desc "")
+               (bitrate "")
+               (type "")
+               (time "")
+               (comment "")
+               broadcasting))
 
 
 (provide 'helm-ypv-class)
