@@ -45,7 +45,7 @@
 
 (defmethod helm-ypv-bookmark-data-add ((bookmark ypv-bookmark) file)
   (if (file-exists-p file)
-      (if (helm-ypv-bookmark-data-channel-exists-p file bookmark)
+      (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
           (helm-ypv-bookmark-data-update bookmark file)
         (helm-ypv-bookmark-data-append bookmark file))
     (helm-ypv-bookmark-data-write file (list bookmark))))
@@ -60,7 +60,7 @@
   (cl-letf* ((old-bookmarks (helm-ypv-bookmark-data-read file))
              (new (helm-ypv-bookmark-remove-if-name
                    bookmark old-bookmarks)))
-    (if (helm-ypv-bookmark-data-channel-exists-p file bookmark)
+    (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
         (progn
           (message "updating bookmark")
           (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list bookmark)))
@@ -75,7 +75,7 @@
                                    bookmark old))
     (message (format "removed %s" bookmark))))
 
-(cl-defun helm-ypv-bookmark-data-channel-exists-p (file bkm)
+(defmethod helm-ypv-bookmark-data-channel-exists-p ((bkm ypv-bookmark) file)
   (cl-find bkm (helm-ypv-bookmark-data-read file)
            :test 'helm-ypv-bookmark-equal-name))
 
