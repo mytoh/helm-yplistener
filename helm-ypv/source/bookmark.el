@@ -29,7 +29,7 @@
   (equal (ypv-bookmark-name bmk1)
          (ypv-bookmark-name bmk2)))
 
-(cl-defun helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
+(defmethod helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
   (cl-remove-if
    (lambda (old-bookmark)
      (helm-ypv-bookmark-equal-name
