@@ -13,7 +13,7 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Action
-(cl-defun helm-ypv-channel-action-open-channel (_candidate)
+(defmethod helm-ypv-channel-action-open-channel ((_candidate ypv-channel))
   (cl-letf* ((info _candidate)
              (url (helm-ypv-channel-make-url info)))
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))

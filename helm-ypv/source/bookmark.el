@@ -98,15 +98,15 @@
 
 ;;;;; Action
 
-(cl-defun helm-ypv-bookmark-action-add (_candidate)
+(defmethod helm-ypv-bookmark-action-add ((_candidate ypv-channel))
   (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark _candidate)))
     (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file) bookmark)))
 
-(cl-defun helm-ypv-bookmark-action-remove (_candidate)
+(defmethod helm-ypv-bookmark-action-remove ((_candidate ypv-bookmark))
   (cl-letf ((bookmark _candidate))
     (helm-ypv-bookmark-data-remove (helm-ypv-bookmark-data-file) bookmark)))
 
-(cl-defun helm-ypv-bookmark-action-open-channel (candidate)
+(defmethod helm-ypv-bookmark-action-open-channel ((candidate ypv-bookmark))
   (cl-letf* ((bookmark candidate)
              (url (helm-ypv-bookmark-make-url bookmark)))
     (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark)
