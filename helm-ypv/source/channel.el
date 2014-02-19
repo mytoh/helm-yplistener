@@ -21,10 +21,10 @@
     (helm-ypv-player helm-ypv-player-type url)))
 
 (defmethod helm-ypv-make-url ((channel ypv-channel))
-  (format "http://%s/pls/%s?tip=%s"
-          helm-ypv-local-address
-          (ypv-channel-id channel)
-          (ypv-channel-ip channel)))
+  (with-slots (id ip) channel
+    (format "http://%s/pls/%s?tip=%s"
+            helm-ypv-local-address
+            id ip)))
 
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
