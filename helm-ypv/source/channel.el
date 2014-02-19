@@ -17,7 +17,7 @@
   (cl-letf* ((info _candidate)
              (url (helm-ypv-make-url info)))
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))
-      (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file) bookmark))
+      (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file)))
     (helm-ypv-player helm-ypv-player-type url)))
 
 (defmethod helm-ypv-make-url ((channel ypv-channel))
