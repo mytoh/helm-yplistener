@@ -13,7 +13,7 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Action
-(defmethod helm-ypv-channel-action-open-channel ((_candidate ypv-channel))
+(defmethod helm-ypv-action-open-channel ((_candidate ypv-channel))
   (cl-letf* ((info _candidate)
              (url (helm-ypv-make-url info)))
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))
@@ -69,7 +69,7 @@
   `((name . ,(helm-ypv-channel-add-source-mark "Channel list"))
     (init . helm-ypv-channel-init)
     (candidates . helm-ypv-channel-candidate-channels)
-    (action . (("Open channel" .  helm-ypv-channel-action-open-channel)
+    (action . (("Open channel" .  helm-ypv-action-open-channel)
                ("Add to bookmarks" . helm-ypv-bookmark-action-add)))))
 
 ;;; Provide

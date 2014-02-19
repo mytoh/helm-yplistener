@@ -109,7 +109,7 @@
   (cl-letf ((bookmark _candidate))
     (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file))))
 
-(defmethod helm-ypv-bookmark-action-open-channel ((candidate ypv-bookmark))
+(defmethod helm-ypv-action-open-channel ((candidate ypv-bookmark))
   (cl-letf* ((bookmark candidate)
              (url (helm-ypv-make-url bookmark)))
     (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file))
@@ -181,7 +181,7 @@
   `((name . ,(helm-ypv-bookmark-add-source-mark "Bookmarks"))
     (init . helm-ypv-bookmark-init)
     (candidates . helm-ypv-candidate-bookmarks)
-    (action . (("Open channel" . helm-ypv-bookmark-action-open-channel)
+    (action . (("Open channel" . helm-ypv-action-open-channel)
                ("Remove bookmark" . helm-ypv-bookmark-action-remove)))))
 
 
