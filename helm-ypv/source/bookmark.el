@@ -91,6 +91,7 @@
 (defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
   (with-slots (yp name id ip contact) channel
     (make-instance 'ypv-bookmark
+                   name
                    :yp yp
                    :name name
                    :id id

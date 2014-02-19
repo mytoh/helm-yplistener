@@ -33,6 +33,7 @@
 
 (cl-defun helm-ypv-info->channel (info)
   (make-instance 'ypv-channel
+                 (cl-second info)
                  :yp (symbol-name (cl-first info))
                  :name (cl-second info)
                  :id (cl-third info)
