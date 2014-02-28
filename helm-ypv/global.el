@@ -3,6 +3,7 @@
 ;;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
+(require 'helm-utils)
 (require 's)
 (require 'url)
 ;;;;;; Local
@@ -34,7 +35,7 @@
 (cl-defun helm-ypv-info->channel (info)
   (make-instance 'ypv-channel
                  (cl-second info)
-                 :yp (symbol-name (cl-first info))
+                 :yp (helm-stringify (cl-first info))
                  :name (cl-second info)
                  :id (cl-third info)
                  :ip (cl-fourth info)
@@ -78,8 +79,8 @@
   (cl-letf ((res (-> (cadr info)
                    helm-ypv-make-yp-index-url
                    helm-ypv-url-retrieve)))
-    (if res
-        (list (car info) res)
+    (helm-aif res
+        (list (car info) it)
       nil)))
 
 (cl-defun helm-ypv-get-channels (yp-info)
