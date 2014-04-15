@@ -70,7 +70,8 @@
     (init . helm-ypv-channel-init)
     (candidates . helm-ypv-channel-candidate-channels)
     (action . (("Open channel" .  helm-ypv-action-open-channel)
-               ("Add to bookmarks" . helm-ypv-bookmark-action-add)))))
+               ("Add to bookmarks" . helm-ypv-bookmark-action-add)))
+    (migemo)))
 
 ;;; Provide
 (provide 'helm-ypv-source-channel)
