@@ -70,7 +70,7 @@
 (cl-defun helm-ypv-url-retrieve (url)
   (helm-ypv-message "get %s" url)
   (cl-letf ((res (helm-ypv-remove-http-header
-                  (url-retrieve-synchronously url t))))
+                  (url-retrieve-synchronously url 'silent 'inhibit-cookies))))
     (if (helm-ypv-empty-response-p res)
         nil
       (helm-ypv-replace-html-entities res))))
