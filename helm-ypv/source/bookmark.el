@@ -60,9 +60,10 @@
     (message (format "added %s" bookmark))))
 
 (defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
-  (cl-letf* ((old-bookmarks (helm-ypv-bookmark-data-read file))
-             (new (helm-ypv-bookmark-remove-if-name
-                   bookmark old-bookmarks)))
+  (cl-letf ((new (thread-last file
+                   helm-ypv-bookmark-data-read
+                   (helm-ypv-bookmark-remove-if-name
+                    bookmark))))
     (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
         (cl-locally
             (message "updating bookmark")
