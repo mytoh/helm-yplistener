@@ -53,7 +53,10 @@
 (defmethod helm-ypv-bookmark-data-append ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
-    (helm-ypv-bookmark-data-write file (cl-concatenate 'list old (list bookmark)))
+    (thread-last bookmark
+      list
+      (cl-concatenate 'list old)
+      (helm-ypv-bookmark-data-write file))
     (message (format "added %s" bookmark))))
 
 (defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
