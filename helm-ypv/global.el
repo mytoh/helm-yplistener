@@ -76,12 +76,11 @@
       (helm-ypv-replace-html-entities res))))
 
 (cl-defun helm-ypv-get-channel (info)
-  (cl-letf ((res (-> (cadr info)
-                   helm-ypv-make-yp-index-url
-                   helm-ypv-url-retrieve)))
-    (helm-aif res
-        (list (car info) it)
-      nil)))
+  (if-let ((res (thread-first (cadr info)
+                  helm-ypv-make-yp-index-url
+                  helm-ypv-url-retrieve)))
+      (list (car info) res)
+    nil))
 
 (cl-defun helm-ypv-get-channels (yp-info)
   (cl-mapcar
