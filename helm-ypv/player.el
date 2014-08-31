@@ -11,7 +11,7 @@
                                      "mplayer --playlist="
                                      "'" url "'"
                                      " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
-                                     " &" )))
+                                     " &")))
     (message command)
     (start-process-shell-command "ypv" nil command)))
 

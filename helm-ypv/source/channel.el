@@ -26,6 +26,11 @@
             helm-ypv-local-address
             id ip)))
 
+(defmethod helm-ypv-action-copy-conctact-url ((channel ypv-channel))
+  (with-slots (contact) channel
+    (kill-new contact)
+    (message "copy %s" contact)))
+
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
   (cl-mapcar
@@ -70,7 +75,8 @@
     (init . helm-ypv-channel-init)
     (candidates . helm-ypv-channel-candidate-channels)
     (action . (("Open channel" .  helm-ypv-action-open-channel)
-               ("Add to bookmarks" . helm-ypv-bookmark-action-add)))
+               ("Add to bookmarks" . helm-ypv-bookmark-action-add)
+               ("Copy contact url" . helm-ypv-action-copy-conctact-url)))
     (migemo)))
 
 ;;; Provide
