@@ -13,9 +13,9 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Action
-(defmethod helm-ypv-action-open-channel ((channel ypv-channel))
-  (with-slots (url) channel
-    (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark info)))
+(defmethod helm-ypv-action-channel-open ((channel ypv-channel))
+  (cl-letf ((url (helm-ypv-make-url channel)))
+    (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark channel)))
       (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file)))
     (helm-ypv-player helm-ypv-player-type url)))
 
@@ -25,7 +25,7 @@
             helm-ypv-local-address
             id ip)))
 
-(defmethod helm-ypv-action-copy-conctact-url ((channel ypv-channel))
+(defmethod helm-ypv-action-channel-copy-conctact-url ((channel ypv-channel))
   (with-slots (contact) channel
     (kill-new contact)
     (message "copy %s" contact)))
@@ -73,9 +73,9 @@
   `((name . ,(helm-ypv-channel-add-source-mark "Channel list"))
     (init . helm-ypv-channel-init)
     (candidates . helm-ypv-channel-candidate-channels)
-    (action . (("Open channel" .  helm-ypv-action-open-channel)
-               ("Add to bookmarks" . helm-ypv-bookmark-action-add)
-               ("Copy contact url" . helm-ypv-action-copy-conctact-url)))
+    (action . (("Open channel" .  helm-ypv-action-channel-open)
+               ("Add to bookmarks" . helm-ypv-action-bookmark-add)
+               ("Copy contact url" . helm-ypv-action-channel-copy-conctact-url)))
     (migemo)))
 
 ;;; Provide
