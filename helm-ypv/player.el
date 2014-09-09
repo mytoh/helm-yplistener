@@ -1,8 +1,8 @@
 ;;; player.el -*- lexical-binding: t -*-
 
 (cl-defun helm-ypv-player (player url)
-  (cl-case player
-    (mplayer2
+  (pcase player
+    (`mplayer2
      (helm-ypv-player-mplayer2 url))))
 
 (cl-defun helm-ypv-player-mplayer2 (url)
