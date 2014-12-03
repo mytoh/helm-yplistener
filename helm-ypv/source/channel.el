@@ -9,6 +9,7 @@
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-face "helm-ypv/face")
 (require 'helm-ypv-player "helm-ypv/player")
+(require 'helm-ypv-url "helm-ypv/url")
 
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
@@ -18,12 +19,6 @@
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark channel)))
       (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file)))
     (helm-ypv-player helm-ypv-player-type url)))
-
-(defmethod helm-ypv-make-url ((channel ypv-channel))
-  (with-slots (id ip) channel
-    (format "http://%s/pls/%s?tip=%s"
-            helm-ypv-local-address
-            id ip)))
 
 (defmethod helm-ypv-action-channel-copy-conctact-url ((channel ypv-channel))
   (with-slots (contact) channel

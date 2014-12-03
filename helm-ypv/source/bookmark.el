@@ -7,6 +7,7 @@
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-player "helm-ypv/player")
 (require 'helm-ypv-face "helm-ypv/face")
+(require 'helm-ypv-url "helm-ypv/url")
 
 (autoload 'helm-ypv-get/parse-channels "helm-ypv/global")
 (autoload 'helm-ypv-player "helm-ypv/global")
@@ -14,10 +15,6 @@
 
 ;;;; Functions
 ;;;;; Utils
-(defmethod helm-ypv-make-url-from-bookmark ((bkm ypv-bookmark))
-  (with-slots (id ip) bkm (format "http://%s/pls/%s?tip=%s"
-                                  helm-ypv-local-address
-                                  id ip)))
 
 (cl-defun helm-ypv-bookmark-equal-id (bmk1 bmk2)
   (equal (ypv-bookmark-id bmk1)
@@ -101,7 +98,7 @@
   (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file)))
 
 (defmethod helm-ypv-action-bookmark-open ((bookmark ypv-bookmark))
-  (cl-letf ((url (helm-ypv-make-url-from-bookmark bookmark)))
+  (cl-letf ((url (helm-ypv-make-url bookmark)))
     (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file))
     (helm-ypv-player helm-ypv-player-type url)))
 
