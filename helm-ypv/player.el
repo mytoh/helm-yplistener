@@ -3,7 +3,9 @@
 (cl-defun helm-ypv-player (player url)
   (pcase player
     (`mplayer2
-     (helm-ypv-player-mplayer2 url))))
+     (helm-ypv-player-mplayer2 url))
+    (`mpv
+     (helm-ypv-player-mpv url))))
 
 (cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
@@ -11,6 +13,17 @@
                                      "mplayer --playlist="
                                      "'" url "'"
                                      " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
+                                     " &")))
+    (message command)
+    (start-process-shell-command "ypv" nil command)))
+
+
+(cl-defun helm-ypv-player-mpv (url)
+  (message url)
+  (cl-letf ((command (cl-concatenate 'string
+                                     "mpv --playlist="
+                                     "'" url "'"
+                                     " --ytdl=no"
                                      " &")))
     (message command)
     (start-process-shell-command "ypv" nil command)))
