@@ -69,7 +69,7 @@
 
 (defmethod helm-ypv-bookmark-data-channel-exists-p ((bkm ypv-bookmark) file)
   (cl-find bkm (helm-ypv-bookmark-data-read file)
-           :test 'helm-ypv-bookmark-equal-name))
+           :test #'helm-ypv-bookmark-equal-name))
 
 (cl-defun helm-ypv-bookmark-data-read (file)
   (with-temp-buffer (insert-file-contents file)

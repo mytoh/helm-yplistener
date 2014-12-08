@@ -26,10 +26,10 @@
      channels)))
 
 (cl-defun helm-ypv-message (fmt &rest text)
-  (apply 'message (format "[%s] %s"
-                          (propertize "helm-ypv"
-                                      'face '(:foreground "#539b8f"))
-                          fmt)
+  (apply #'message (format "[%s] %s"
+                           (propertize "helm-ypv"
+                                       'face '(:foreground "#539b8f"))
+                           fmt)
          text))
 
 (cl-defun helm-ypv-info->channel (info)
@@ -84,7 +84,7 @@
 
 (cl-defun helm-ypv-get-channels (yp-info)
   (cl-mapcar
-   'helm-ypv-get-channel
+   #'helm-ypv-get-channel
    yp-info))
 
 (cl-defun helm-ypv-remove-http-header (buf)
@@ -107,7 +107,7 @@
 
 (cl-defun helm-ypv-get/parse-channels (yp-infos)
   (cl-mapcan
-   'helm-ypv-parse-channels
+   #'helm-ypv-parse-channels
    (cl-remove nil (helm-ypv-get-channels yp-infos))))
 
 
