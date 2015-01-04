@@ -4,7 +4,7 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el (require 'helm)
 (require 'seq)
 ;;;;; Local
-(require 'helm-ypv-class "helm-ypv/class")
+(require 'ypv-class "helm-ypv/ypv-class")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 (require 'helm-ypv-player "helm-ypv/player")
 (require 'helm-ypv-face "helm-ypv/face")
