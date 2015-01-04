@@ -42,6 +42,7 @@
                (time "")
                (comment "")
                (listeners "")
+               (relays "")
                broadcasting))
 
 
