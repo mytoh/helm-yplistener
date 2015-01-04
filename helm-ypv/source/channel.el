@@ -38,7 +38,7 @@
    channels))
 
 (defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
-  (with-slots (genre desc contact type bitrate time comment listeners)
+  (with-slots (genre desc contact type bitrate time comment listeners relays)
       channel
     (cl-letf ((name (helm-ypv-modify-channel-name channel))
               (genre (helm-ypv-add-face genre 'helm-ypv-genre))
@@ -48,14 +48,15 @@
               (bitrate (helm-ypv-add-face bitrate 'helm-ypv-bitrate))
               (time (helm-ypv-add-face time 'helm-ypv-time))
               (comment (helm-ypv-add-face comment 'helm-ypv-comment))
-              (listeners (helm-ypv-add-face listeners 'helm-ypv-listeners)))
+              (lr (helm-ypv-add-face
+                   (concat listeners "/" relays) 'helm-ypv-lr)))
       (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
               name
               genre
               desc
               bitrate
               time
-              listeners
+              lr
               type
               ;; yp
               ;; (if (string-empty-p comment) "" comment)
@@ -74,7 +75,7 @@
 (defmethod helm-ypv-info-channel-p ((channel ypv-channel))
   ;; return self.listeners()<-1;
   (cl-letf* ((listeners (ypv-channel-listeners channel))
-             (num (string-to-number (car (split-string listeners "/")))))
+             (num (string-to-number listeners)))
     (< num -1)))
 
 (defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
