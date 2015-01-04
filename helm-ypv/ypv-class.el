@@ -45,7 +45,7 @@
                broadcasting))
 
 
-(provide 'helm-ypv-class)
+(provide 'ypv-class)
 
 ;; Local Variables:
 ;; coding: utf-8
