@@ -38,7 +38,7 @@
    channels))
 
 (defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
-  (cl-letf ((name (helm-ypv-add-face (ypv-channel-name channel) 'helm-ypv-name))
+  (cl-letf ((name (helm-ypv-modify-channel-name channel))
             (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre))
             (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc))
             (contact (helm-ypv-add-face (ypv-channel-contact channel) 'helm-ypv-contact))
@@ -46,8 +46,7 @@
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment))
-            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-listeners))
-            )
+            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-listeners)))
     (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
             name
             genre
@@ -60,6 +59,30 @@
             ;; (if (string-empty-p comment) "" comment)
             contact
             )))
+
+(defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
+  (helm-ypv-add-face (ypv-channel-name channel)
+                     (cond ((helm-ypv-info-channel-p channel)
+                            'font-lock-function-name-face)
+                           ((helm-ypv-channel-playable-p channel)
+                            'helm-ypv-name)
+                           (t
+                            'font-lock-variable-name-face))))
+
+(defmethod helm-ypv-info-channel-p ((channel ypv-channel))
+  ;; return self.listeners()<-1;
+  (cl-letf* ((listeners (ypv-channel-listeners channel))
+             (num (string-to-number (car (split-string listeners "/")))))
+    (< num -1)))
+
+(defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
+  ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
+  (cl-letf ((id (ypv-channel-id channel)))
+    (not (or (string-equal
+              id
+              "00000000000000000000000000000000")
+             (null id)
+             (string-empty-p id)))))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
