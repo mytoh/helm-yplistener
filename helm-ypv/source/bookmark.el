@@ -81,14 +81,15 @@
 
 
 (defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
-  (with-slots (yp name id ip contact) channel (make-instance 'ypv-bookmark
-                                                             name
-                                                             :yp yp
-                                                             :name name
-                                                             :id id
-                                                             :ip ip
-                                                             :contact contact
-                                                             :broadcasting nil)))
+  (with-slots (yp name id tracker contact) channel
+    (make-instance 'ypv-bookmark
+                   name
+                   :yp yp
+                   :name name
+                   :id id
+                   :tracker tracker
+                   :contact contact
+                   :broadcasting nil)))
 
 ;;;;; Action
 (defmethod helm-ypv-action-bookmark-add ((channel ypv-channel))

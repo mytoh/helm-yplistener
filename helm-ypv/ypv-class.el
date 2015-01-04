@@ -25,7 +25,7 @@
               ((yp "")
                (name "")
                (id "")
-               (ip "")
+               (tracker "")
                (contact "")
                broadcasting))
 
@@ -33,7 +33,7 @@
               ((yp "")
                (name "")
                (id "")
-               (ip "")
+               (tracker "")
                (contact "")
                (genre "")
                (desc "")

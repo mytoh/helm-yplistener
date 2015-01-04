@@ -3,16 +3,16 @@
 ;;; Code:
 
 (defmethod helm-ypv-make-url ((channel ypv-channel))
-  (with-slots (id ip) channel
+  (with-slots (id tracker) channel
     (format "http://%s/pls/%s.pls?tip=%s"
             helm-ypv-local-address
-            id ip)))
+            id tracker)))
 
 (defmethod helm-ypv-make-url ((bkm ypv-bookmark))
-  (with-slots (id ip) bkm
+  (with-slots (id tracker) bkm
     (format "http://%s/pls/%s.pls?tip=%s"
             helm-ypv-local-address
-            id ip)))
+            id tracker)))
 
 (provide 'helm-ypv-url)
 

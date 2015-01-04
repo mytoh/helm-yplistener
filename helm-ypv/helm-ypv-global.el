@@ -38,7 +38,7 @@
                  :yp (helm-stringify (seq-elt info 0))
                  :name (seq-elt info 1)
                  :id (seq-elt info 2)
-                 :ip (seq-elt info 3)
+                 :tracker (seq-elt info 3)
                  :contact (seq-elt info 4)
                  :genre (seq-elt info 5)
                  :desc (seq-elt info 6)
