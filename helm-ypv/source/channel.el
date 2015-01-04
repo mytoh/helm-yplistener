@@ -38,27 +38,29 @@
    channels))
 
 (defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
-  (cl-letf ((name (helm-ypv-modify-channel-name channel))
-            (genre (helm-ypv-add-face (ypv-channel-genre channel) 'helm-ypv-genre))
-            (desc (helm-ypv-add-face (ypv-channel-desc channel) 'helm-ypv-desc))
-            (contact (helm-ypv-add-face (ypv-channel-contact channel) 'helm-ypv-contact))
-            (type (helm-ypv-add-face (ypv-channel-type channel) 'helm-ypv-type))
-            (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
-            (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
-            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment))
-            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-listeners)))
-    (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
-            name
-            genre
-            desc
-            bitrate
-            time
-            listeners
-            type
-            ;; yp
-            ;; (if (string-empty-p comment) "" comment)
-            contact
-            )))
+  (with-slots (genre desc contact type bitrate time comment listeners)
+      channel
+    (cl-letf ((name (helm-ypv-modify-channel-name channel))
+              (genre (helm-ypv-add-face genre 'helm-ypv-genre))
+              (desc (helm-ypv-add-face desc 'helm-ypv-desc))
+              (contact (helm-ypv-add-face contact 'helm-ypv-contact))
+              (type (helm-ypv-add-face type 'helm-ypv-type))
+              (bitrate (helm-ypv-add-face bitrate 'helm-ypv-bitrate))
+              (time (helm-ypv-add-face time 'helm-ypv-time))
+              (comment (helm-ypv-add-face comment 'helm-ypv-comment))
+              (listeners (helm-ypv-add-face listeners 'helm-ypv-listeners)))
+      (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
+              name
+              genre
+              desc
+              bitrate
+              time
+              listeners
+              type
+              ;; yp
+              ;; (if (string-empty-p comment) "" comment)
+              contact
+              ))))
 
 (defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
   (helm-ypv-add-face (ypv-channel-name channel)
@@ -77,7 +79,7 @@
 
 (defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
-  (cl-letf ((id (ypv-channel-id channel)))
+  (with-slots (id) channel
     (not (or (string-equal
               id
               "00000000000000000000000000000000")
