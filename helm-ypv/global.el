@@ -4,25 +4,25 @@
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
 (require 'helm)
 (require 'helm-utils)
-(require 's)
 (require 'url)
+(require 'seq)
 ;;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
 
 ;;;;; Functions
 (cl-defun helm-ypv-make-yp-index-url (info)
-  (cl-concatenate 'string "http://" info "/" "index.txt"))
+  (seq-concatenate 'string "http://" info "/" "index.txt"))
 
 (cl-defun helm-ypv-parse-channels (info)
   (cl-letf* ((yp-name (car info))
              (content (cadr info))
              (channels (split-string content "\n")))
-    (cl-mapcar
+    (seq-map
      (lambda (x)
        (helm-ypv-info->channel
-        (cl-concatenate 'list
-                        (list yp-name)
-                        (split-string x "<>"))))
+        (seq-concatenate 'list
+                         (list yp-name)
+                         (split-string x "<>"))))
      channels)))
 
 (cl-defun helm-ypv-message (fmt &rest text)
@@ -83,7 +83,7 @@
     nil))
 
 (cl-defun helm-ypv-get-channels (yp-info)
-  (cl-mapcar
+  (seq-map
    #'helm-ypv-get-channel
    yp-info))
 
