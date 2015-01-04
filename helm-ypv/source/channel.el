@@ -6,11 +6,11 @@
 (require 'helm)
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
-(require 'helm-ypv-global "helm-ypv/global")
-(require 'helm-ypv-user-variable "helm-ypv/user-variable")
+(require 'helm-ypv-global "helm-ypv/helm-ypv-global")
+(require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
 (require 'helm-ypv-face "helm-ypv/helm-ypv-face")
-(require 'helm-ypv-player "helm-ypv/player")
-(require 'helm-ypv-url "helm-ypv/url")
+(require 'helm-ypv-player "helm-ypv/helm-ypv-player")
+(require 'helm-ypv-url "helm-ypv/helm-ypv-url")
 
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 

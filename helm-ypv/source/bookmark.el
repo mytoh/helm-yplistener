@@ -5,13 +5,13 @@
 (require 'seq)
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
-(require 'helm-ypv-user-variable "helm-ypv/user-variable")
-(require 'helm-ypv-player "helm-ypv/player")
+(require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
+(require 'helm-ypv-player "helm-ypv/helm-ypv-player")
 (require 'helm-ypv-face "helm-ypv/helm-ypv-face")
-(require 'helm-ypv-url "helm-ypv/url")
+(require 'helm-ypv-url "helm-ypv/helm-ypv-url")
 
-(autoload 'helm-ypv-get/parse-channels "helm-ypv/global")
-(autoload 'helm-ypv-player "helm-ypv/global")
+(autoload 'helm-ypv-get/parse-channels "helm-ypv/helm-ypv-global")
+(autoload 'helm-ypv-player "helm-ypv/helm-ypv-global")
 
 
 ;;;; Functions

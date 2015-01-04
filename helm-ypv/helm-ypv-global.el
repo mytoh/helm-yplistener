@@ -7,7 +7,7 @@
 (require 'url)
 (require 'seq)
 ;;;;;; Local
-(require 'helm-ypv-user-variable "helm-ypv/user-variable")
+(require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
 
 ;;;;; Functions
 (cl-defun helm-ypv-make-yp-index-url (info)
