@@ -2,6 +2,7 @@
 
 ;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el (require 'helm)
+(require 'seq)
 ;;;;; Local
 (require 'helm-ypv-class "helm-ypv/class")
 (require 'helm-ypv-user-variable "helm-ypv/user-variable")
@@ -25,10 +26,10 @@
          (ypv-bookmark-name bmk2)))
 
 (defmethod helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
-  (cl-remove-if (lambda (old-bookmark)
-                  (helm-ypv-bookmark-equal-name
-                   old-bookmark new-bookmark))
-                bookmarks))
+  (seq-remove (lambda (old-bookmark)
+                (helm-ypv-bookmark-equal-name
+                 old-bookmark new-bookmark))
+              bookmarks))
 
 ;;;;; Bookmark Data
 (cl-defun helm-ypv-bookmark-data-write (file data)
@@ -46,7 +47,7 @@
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
     (thread-last bookmark
-      list (cl-concatenate 'list old)
+      list (seq-concatenate 'list old)
       (helm-ypv-bookmark-data-write file))
     (message (format "added %s" bookmark))))
 
@@ -56,7 +57,7 @@
                                                 bookmark))))
     (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
         (cl-locally (message "updating bookmark")
-          (helm-ypv-bookmark-data-write file (cl-concatenate 'list new (list bookmark)))
+          (helm-ypv-bookmark-data-write file (seq-concatenate 'list new (list bookmark)))
           (message (format "update to add %s" bookmark)))
       (message "channel not found on bookmark"))))
 
@@ -121,12 +122,12 @@
               channels))
 
 (cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)
-  (cl-remove-if (lambda (b) (eq b nil))
-                (cl-map 'list (lambda (bookmark)
-                                (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
-                                    (helm-ypv-bookmark-set-broadcasting bookmark t)
-                                  (helm-ypv-bookmark-set-broadcasting bookmark nil)))
-                        bookmarks)))
+  (seq-remove (lambda (b) (eq b nil))
+              (seq-map (lambda (bookmark)
+                         (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
+                             (helm-ypv-bookmark-set-broadcasting bookmark t)
+                           (helm-ypv-bookmark-set-broadcasting bookmark nil)))
+                       bookmarks)))
 
 (defmethod helm-ypv-bookmark-set-broadcasting ((obj ypv-bookmark) value)
   (setf (ypv-bookmark-broadcasting obj) value)
@@ -135,14 +136,14 @@
 (cl-defun helm-ypv-bookmark-create-candidates (channels)
   (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
       '()
-    (cl-mapcar (lambda (bookmark)
-                 (cons
-                  ;; display candidate
-                  (helm-ypv-create-display-candidate bookmark)
-                  ;; real candidate
-                  bookmark))
-               (helm-ypv-bookmark-find-broadcasting-channels (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
-                                                             channels))))
+    (seq-map (lambda (bookmark)
+               (cons
+                ;; display candidate
+                (helm-ypv-create-display-candidate bookmark)
+                ;; real candidate
+                bookmark))
+             (helm-ypv-bookmark-find-broadcasting-channels (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
+                                                           channels))))
 
 ;;;;; Source
 (defvar helm-ypv-candidate-bookmarks nil)
@@ -153,7 +154,7 @@
 (defun helm-ypv-bookmark-add-source-mark (name)
   (cl-letf ((mark "🔖")) ; "\U0001F516"
     (cond ((window-system)
-           (cl-concatenate 'string " " mark " "  name))
+           (seq-concatenate 'string " " mark " "  name))
           (t
            name))))
 

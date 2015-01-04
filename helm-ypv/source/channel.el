@@ -27,7 +27,7 @@
 
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
-  (cl-mapcar
+  (seq-map
    (lambda (info)
      (cons
       ;; display candidate
@@ -60,7 +60,7 @@
 (defun helm-ypv-channel-add-source-mark (name)
   (cl-letf ((mark "📺")) ; "\U0001F4FA"
     (cond ((window-system)
-           (cl-concatenate 'string " " mark " "  name))
+           (seq-concatenate 'string " " mark " "  name))
           (t
            name))))
 

@@ -2,9 +2,11 @@
 
 ;;;;; Bookmark Info
 
+(require 'seq)
+
 (cl-defmacro ypv-defclass (name slots)
   `(defclass ,name ()
-     ,(mapcar
+     ,(seq-map
        (lambda (s)
          (if (listp s)
              (list (car s)
