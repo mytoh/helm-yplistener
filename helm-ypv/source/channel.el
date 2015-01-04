@@ -45,14 +45,16 @@
             (type (helm-ypv-add-face (ypv-channel-type channel) 'helm-ypv-type))
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
-            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment)))
-    (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %s %s"
+            (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment))
+            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-name))
+            )
+    (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
             name
             genre
             desc
             bitrate
             time
-            ;; listeners
+            listeners
             type
             ;; yp
             ;; (if (string-empty-p comment) "" comment)
