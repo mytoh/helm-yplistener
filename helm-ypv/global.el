@@ -99,7 +99,8 @@
 
 (cl-defun helm-ypv-empty-response-p (str)
   (if (stringp str)
-      (s-match "^\n$" str)
+      (save-match-data
+        (string-match "^\n$" str))
     nil))
 
 (cl-defun helm-ypv-string->utf-8 (str)
