@@ -54,7 +54,7 @@
   "face for channel id"
   :group 'helm-ypv)
 
-(defface helm-ypv-listeners
+(defface helm-ypv-lr
     '((t :inherit font-lock-builtin-face))
   "face for channel listeners number"
   :group 'helm-ypv)
