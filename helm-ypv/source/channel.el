@@ -2,6 +2,7 @@
 
 ;;;; Requires
 (eval-when-compile (require 'cl-lib)) ; don't use cl.el
+(require 'seq)
 (require 'helm)
 ;;;;; Local
 (require 'helm-ypv-class "helm-ypv/class")
@@ -45,9 +46,18 @@
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment)))
-    (format "%-17.17s %s %s %s %s %s %s"
-            name desc (if (string-empty-p comment) "" comment)
-            genre contact type time)))
+    (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %s %s"
+            name
+            genre
+            desc
+            bitrate
+            time
+            ;; listeners
+            type
+            ;; yp
+            ;; (if (string-empty-p comment) "" comment)
+            contact
+            )))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
