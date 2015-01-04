@@ -46,7 +46,7 @@
             (bitrate (helm-ypv-add-face (ypv-channel-bitrate channel) 'helm-ypv-bitrate))
             (time (helm-ypv-add-face (ypv-channel-time channel) 'helm-ypv-time))
             (comment (helm-ypv-add-face (ypv-channel-comment channel) 'helm-ypv-comment))
-            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-name))
+            (listeners (helm-ypv-add-face (ypv-channel-listeners channel) 'helm-ypv-listeners))
             )
     (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
             name
