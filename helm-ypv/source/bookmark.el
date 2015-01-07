@@ -151,7 +151,9 @@
 (defvar helm-ypv-candidate-bookmarks nil)
 
 (cl-defun helm-ypv-bookmark-init ()
-  (setq helm-ypv-candidate-bookmarks (helm-ypv-bookmark-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
+  (setq helm-ypv-candidate-bookmarks
+        (helm-ypv-bookmark-create-candidates
+         (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
 
 (defun helm-ypv-bookmark-add-source-mark (name)
   (cl-letf ((mark "🔖")) ; "\U0001F516"
