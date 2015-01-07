@@ -13,9 +13,25 @@ channel.Relays      = ParseInt(tokens[7]);  //8 RELAY_NUM Relay数 同上
 channel.Bitrate     = ParseInt(tokens[8]);  //9 BITRATE Bitrate 単位は kbps
 channel.ContentType = ParseStr(tokens[9]);  //10 TYPE Type たぶん大文字
 channel.Artist      = ParseStr(tokens[10]); //11 TRACK_ARTIST トラック アーティスト
-channel.TrackTitle  = ParseStr(tokens[11]); //12 TRACK_TITLE トラック タイトル
-channel.Album       = ParseStr(tokens[12]); //13 TRACK_ALBUM トラック アルバム
+channel.Album       = ParseStr(tokens[11]); //12 TRACK_ALBUM トラック アルバム
+channel.TrackTitle  = ParseStr(tokens[12]); //13 TRACK_TITLE トラック タイトル
 channel.TrackUrl    = ParseStr(tokens[13]); //14 TRACK_CONTACT_URL トラック コンタクトURL 基本的にURL、任意の文字列も可
 channel.Uptime      = ParseUptime(tokens[15]); //16 BROADCAST_TIME 配信時間 000〜99999
 channel.Comment     = ParseStr(tokens[17]); //18 COMMENT コメント
 #+end_quote
+
+#+begin_src emacs-lisp
+yp
+name
+id
+tracker
+contact
+genre
+desc
+bitrate
+type
+uptime
+listeners
+relays
+comment
+#+end_src
