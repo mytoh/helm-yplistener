@@ -39,9 +39,9 @@
   "face for channel bitrate"
   :group 'helm-ypv)
 
-(defface helm-ypv-time
+(defface helm-ypv-uptime
     '((t :inherit font-lock-preprocessor-face))
-  "face for channel time"
+  "face for channel uptime"
   :group 'helm-ypv)
 
 (defface helm-ypv-comment

@@ -38,7 +38,7 @@
    channels))
 
 (defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
-  (with-slots (genre desc contact type bitrate time comment listeners relays)
+  (with-slots (genre desc contact type bitrate uptime comment listeners relays)
       channel
     (cl-letf ((name (helm-ypv-modify-channel-name channel))
               (genre (helm-ypv-add-face genre 'helm-ypv-genre))
@@ -46,7 +46,7 @@
               (contact (helm-ypv-add-face contact 'helm-ypv-contact))
               (type (helm-ypv-add-face type 'helm-ypv-type))
               (bitrate (helm-ypv-add-face bitrate 'helm-ypv-bitrate))
-              (time (helm-ypv-add-face time 'helm-ypv-time))
+              (uptime (helm-ypv-add-face uptime 'helm-ypv-uptime))
               (comment (helm-ypv-add-face comment 'helm-ypv-comment))
               (lr (helm-ypv-add-face
                    (concat listeners "/" relays) 'helm-ypv-lr)))
@@ -55,7 +55,7 @@
               genre
               desc
               bitrate
-              time
+              uptime
               lr
               type
               ;; yp

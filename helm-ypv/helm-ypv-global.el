@@ -44,7 +44,7 @@
                  :desc (seq-elt info 6)
                  :bitrate (seq-elt info 9)
                  :type (seq-elt info 10)
-                 :time (seq-elt info 16)
+                 :uptime (seq-elt info 16)
                  :listeners (seq-elt info 7)
                  :relays (seq-elt info 8)
                  :comment (seq-elt info 18)))

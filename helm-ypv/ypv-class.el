@@ -39,7 +39,7 @@
                (desc "")
                (bitrate "")
                (type "")
-               (time "")
+               (uptime "")
                (comment "")
                (listeners "")
                (relays "")
