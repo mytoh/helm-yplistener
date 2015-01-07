@@ -50,10 +50,11 @@
               (comment (helm-ypv-add-face comment 'helm-ypv-comment))
               (lr (helm-ypv-add-face
                    (concat listeners "/" relays) 'helm-ypv-lr)))
-      (format "%-16.16s %-8.8s %-40.40s %+4s %+4s %7s %s %s"
+      (format "%-16.16s %-8.8s %-40.40s %-40.40s %+4s %+4s %7s %s %s"
               name
               genre
               desc
+              comment
               bitrate
               uptime
               lr
