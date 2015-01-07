@@ -143,8 +143,9 @@
                 (helm-ypv-create-display-candidate bookmark)
                 ;; real candidate
                 bookmark))
-             (helm-ypv-bookmark-find-broadcasting-channels (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
-                                                           channels))))
+             (helm-ypv-bookmark-find-broadcasting-channels
+              (helm-ypv-bookmark-data-read (helm-ypv-bookmark-data-file))
+              channels))))
 
 ;;;;; Source
 (defvar helm-ypv-candidate-bookmarks nil)
