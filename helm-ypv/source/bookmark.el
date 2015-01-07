@@ -53,8 +53,8 @@
 
 (defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
   (cl-letf ((new (thread-last file
-                   helm-ypv-bookmark-data-read (helm-ypv-bookmark-remove-if-name
-                                                bookmark))))
+                   helm-ypv-bookmark-data-read
+                   (helm-ypv-bookmark-remove-if-name bookmark))))
     (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
         (cl-locally (message "updating bookmark")
           (helm-ypv-bookmark-data-write file (seq-concatenate 'list new (list bookmark)))
@@ -64,8 +64,9 @@
 (defmethod helm-ypv-bookmark-data-remove ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "removing bookmark")
-    (helm-ypv-bookmark-data-write file (helm-ypv-bookmark-remove-if-name
-                                        bookmark old))
+    (helm-ypv-bookmark-data-write file
+                                  (helm-ypv-bookmark-remove-if-name
+                                   bookmark old))
     (message (format "removed %s" bookmark))))
 
 (defmethod helm-ypv-bookmark-data-channel-exists-p ((bkm ypv-bookmark) file)
