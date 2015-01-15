@@ -34,7 +34,6 @@
 
 (cl-defun helm-ypv-info->channel (info)
   (make-instance 'ypv-channel
-                 (seq-elt info 1)
                  :yp (helm-stringify (seq-elt info 0))
                  :name (seq-elt info 1)
                  :id (seq-elt info 2)
