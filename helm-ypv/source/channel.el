@@ -15,13 +15,13 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
 
 ;;;; Action
-(defmethod helm-ypv-action-channel-open ((channel ypv-channel))
+(cl-defmethod helm-ypv-action-channel-open ((channel ypv-channel))
   (cl-letf ((url (helm-ypv-make-url channel)))
     (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark channel)))
       (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file)))
     (helm-ypv-player helm-ypv-player-type url)))
 
-(defmethod helm-ypv-action-channel-copy-conctact-url ((channel ypv-channel))
+(cl-defmethod helm-ypv-action-channel-copy-conctact-url ((channel ypv-channel))
   (with-slots (contact) channel
     (kill-new contact)
     (message "copy %s" contact)))
@@ -37,7 +37,7 @@
       info))
    channels))
 
-(defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
+(cl-defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
   (with-slots (genre desc contact type bitrate uptime
                      comment listeners relays yp)
       channel
@@ -65,7 +65,7 @@
               contact
               ))))
 
-(defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
+(cl-defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
   (helm-ypv-add-face (ypv-channel-name channel)
                      (cond ((helm-ypv-info-channel-p channel)
                             'font-lock-function-name-face)
@@ -74,13 +74,13 @@
                            (t
                             'font-lock-variable-name-face))))
 
-(defmethod helm-ypv-info-channel-p ((channel ypv-channel))
+(cl-defmethod helm-ypv-info-channel-p ((channel ypv-channel))
   ;; return self.listeners()<-1;
   (with-slots (listeners) channel
     (cl-letf* ((num (string-to-number listeners)))
       (< num -1))))
 
-(defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
+(cl-defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
   (with-slots (id) channel
     (not (or (string-equal

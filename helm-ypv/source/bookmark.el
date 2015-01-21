@@ -25,7 +25,7 @@
   (equal (ypv-bookmark-name bmk1)
          (ypv-bookmark-name bmk2)))
 
-(defmethod helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
+(cl-defmethod helm-ypv-bookmark-remove-if-name ((new-bookmark ypv-bookmark) bookmarks)
   (seq-remove (lambda (old-bookmark)
                 (helm-ypv-bookmark-equal-name
                  old-bookmark new-bookmark))
@@ -36,14 +36,14 @@
   (with-temp-file file (cl-letf ((standard-output (current-buffer)))
                          (prin1 data))))
 
-(defmethod helm-ypv-bookmark-data-add ((bookmark ypv-bookmark) file)
+(cl-defmethod helm-ypv-bookmark-data-add ((bookmark ypv-bookmark) file)
   (if (file-exists-p file)
       (if (helm-ypv-bookmark-data-channel-exists-p bookmark file)
           (helm-ypv-bookmark-data-update bookmark file)
         (helm-ypv-bookmark-data-append bookmark file))
     (helm-ypv-bookmark-data-write file (list bookmark))))
 
-(defmethod helm-ypv-bookmark-data-append ((bookmark ypv-bookmark) file)
+(cl-defmethod helm-ypv-bookmark-data-append ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
     (thread-last bookmark
@@ -51,7 +51,7 @@
       (helm-ypv-bookmark-data-write file))
     (message (format "added %s" bookmark))))
 
-(defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
+(cl-defmethod helm-ypv-bookmark-data-update ((bookmark ypv-bookmark) file)
   (cl-letf ((new (thread-last file
                    helm-ypv-bookmark-data-read
                    (helm-ypv-bookmark-remove-if-name bookmark))))
@@ -61,7 +61,7 @@
           (message (format "update to add %s" bookmark)))
       (message "channel not found on bookmark"))))
 
-(defmethod helm-ypv-bookmark-data-remove ((bookmark ypv-bookmark) file)
+(cl-defmethod helm-ypv-bookmark-data-remove ((bookmark ypv-bookmark) file)
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "removing bookmark")
     (helm-ypv-bookmark-data-write file
@@ -69,7 +69,7 @@
                                    bookmark old))
     (message (format "removed %s" bookmark))))
 
-(defmethod helm-ypv-bookmark-data-channel-exists-p ((bkm ypv-bookmark) file)
+(cl-defmethod helm-ypv-bookmark-data-channel-exists-p ((bkm ypv-bookmark) file)
   (cl-find bkm (helm-ypv-bookmark-data-read file)
            :test #'helm-ypv-bookmark-equal-name))
 
@@ -81,7 +81,7 @@
   (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
 
 
-(defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
+(cl-defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
   (with-slots (yp name id tracker contact) channel
     (make-instance 'ypv-bookmark
                    :yp yp
@@ -92,20 +92,20 @@
                    :broadcasting nil)))
 
 ;;;;; Action
-(defmethod helm-ypv-action-bookmark-add ((channel ypv-channel))
+(cl-defmethod helm-ypv-action-bookmark-add ((channel ypv-channel))
   (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark channel)))
     (helm-ypv-bookmark-data-add bookmark (helm-ypv-bookmark-data-file))))
 
-(defmethod helm-ypv-action-bookmark-remove ((bookmark ypv-bookmark))
+(cl-defmethod helm-ypv-action-bookmark-remove ((bookmark ypv-bookmark))
   (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file)))
 
-(defmethod helm-ypv-action-bookmark-open ((bookmark ypv-bookmark))
+(cl-defmethod helm-ypv-action-bookmark-open ((bookmark ypv-bookmark))
   (cl-letf ((url (helm-ypv-make-url bookmark)))
     (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file))
     (helm-ypv-player helm-ypv-player-type url)))
 
 ;;;;; Candidate
-(defmethod helm-ypv-create-display-candidate ((bookmark ypv-bookmark))
+(cl-defmethod helm-ypv-create-display-candidate ((bookmark ypv-bookmark))
   (cl-letf ((format-string "%-17.17s %s")
             (name (helm-ypv-add-face (ypv-bookmark-name bookmark)
                                      (if (ypv-bookmark-broadcasting bookmark)
@@ -116,7 +116,7 @@
             name
             id)))
 
-(defmethod helm-ypv-bookmark-channel-broadcasting-p ((bookmark ypv-bookmark) channels)
+(cl-defmethod helm-ypv-bookmark-channel-broadcasting-p ((bookmark ypv-bookmark) channels)
   (cl-find-if (lambda (channel)
                 (equal (ypv-bookmark-id bookmark)
                        (ypv-channel-id channel)))
@@ -130,7 +130,7 @@
                            (helm-ypv-bookmark-set-broadcasting bookmark nil)))
                        bookmarks)))
 
-(defmethod helm-ypv-bookmark-set-broadcasting ((obj ypv-bookmark) value)
+(cl-defmethod helm-ypv-bookmark-set-broadcasting ((obj ypv-bookmark) value)
   (setf (ypv-bookmark-broadcasting obj) value)
   obj)
 
