@@ -10,7 +10,7 @@
 (cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
-                                      "mplayer --playlist="
+                                      "mplayer "
                                       "'" url "'"
                                       " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
                                       " &")))
@@ -21,7 +21,7 @@
 (cl-defun helm-ypv-player-mpv (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
-                                      "mpv --playlist="
+                                      "mpv "
                                       "'" url "'"
                                       " --ytdl=no --loop=inf"
                                       " &")))
