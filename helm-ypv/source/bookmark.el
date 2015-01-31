@@ -163,13 +163,17 @@
           (t
            name))))
 
+(defclass helm-ypv-bookmarks-source (helm-source-sync)
+  ((init  :initform helm-ypv-bookmark-init)
+   (candidates :initform helm-ypv-candidate-bookmarks)
+   (action :initform
+           (helm-make-actions
+            "Open channel" 'helm-ypv-action-bookmark-open
+            "Remove bookmark" 'helm-ypv-action-bookmark-remove))))
+
 (defvar helm-source-ypv-bookmarks
-  `((name . ,(helm-ypv-bookmark-add-source-mark "Bookmarks"))
-    (init . helm-ypv-bookmark-init)
-    (candidates . helm-ypv-candidate-bookmarks)
-    (action . (("Open channel" . helm-ypv-action-bookmark-open)
-               ("Remove bookmark" . helm-ypv-action-bookmark-remove)))
-    (migemo)))
+  (helm-make-source (helm-ypv-bookmark-add-source-mark "Bookmarks")
+      'helm-ypv-bookmarks-source))
 
 
 ;;;; Provide

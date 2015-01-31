@@ -104,14 +104,18 @@
           (t
            name))))
 
+(defclass helm-ypv-channels-source (helm-source-sync)
+  ((init :initform helm-ypv-channel-init)
+   (candidates :initform helm-ypv-channel-candidate-channels)
+   (action :initform
+           (helm-make-actions
+            "Open channel" 'helm-ypv-action-channel-open
+            "Add to bookmarks" 'helm-ypv-action-bookmark-add
+            "Copy contact url" 'helm-ypv-action-channel-copy-conctact-url))))
+
 (defvar helm-source-ypv-channels
-  `((name . ,(helm-ypv-channel-add-source-mark "Channel list"))
-    (init . helm-ypv-channel-init)
-    (candidates . helm-ypv-channel-candidate-channels)
-    (action . (("Open channel" .  helm-ypv-action-channel-open)
-               ("Add to bookmarks" . helm-ypv-action-bookmark-add)
-               ("Copy contact url" . helm-ypv-action-channel-copy-conctact-url)))
-    (migemo)))
+  (helm-make-source (helm-ypv-channel-add-source-mark "Channel list")
+      'helm-ypv-channels-source))
 
 ;;; Provide
 (provide 'helm-ypv-source-channel)
