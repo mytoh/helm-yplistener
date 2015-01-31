@@ -12,7 +12,7 @@
 (require 'helm-ypv-player "helm-ypv/helm-ypv-player")
 (require 'helm-ypv-url "helm-ypv/helm-ypv-url")
 
-(require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
+(require 'helm-ypv-source-bookmark "helm-ypv/source/helm-ypv-source-bookmark")
 
 ;;;; Action
 (cl-defmethod helm-ypv-action-channel-open ((channel ypv-channel))
