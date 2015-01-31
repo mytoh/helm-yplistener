@@ -27,6 +27,7 @@
                (id "")
                (tracker "")
                (contact "")
+               (type "")
                broadcasting))
 
 (ypv-defclass ypv-channel
