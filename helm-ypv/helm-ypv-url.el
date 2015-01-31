@@ -9,10 +9,10 @@
             id type tracker)))
 
 (cl-defmethod helm-ypv-make-url ((bkm ypv-bookmark))
-  (with-slots (id tracker) bkm
-    (format "http://%s/pls/%s.pls?tip=%s"
+  (with-slots (id tracker type) bkm
+    (format "http://%s/stream/%s.%s?tip=%s"
             helm-ypv-local-address
-            id tracker)))
+            id type tracker)))
 
 (provide 'helm-ypv-url)
 
