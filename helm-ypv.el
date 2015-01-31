@@ -13,8 +13,8 @@
 
 (require 'helm-ypv-global "helm-ypv/helm-ypv-global")
 (require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
-(require 'helm-ypv-source-channel "helm-ypv/source/channel")
-(require 'helm-ypv-source-bookmark "helm-ypv/source/bookmark")
+(require 'helm-ypv-source-channel "helm-ypv/source/helm-ypv-source-channel")
+(require 'helm-ypv-source-bookmark "helm-ypv/source/helm-ypv-source-bookmark")
 
 ;;;;; Autoloads
 ;;;###autoload
