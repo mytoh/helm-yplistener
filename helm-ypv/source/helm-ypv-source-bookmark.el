@@ -164,12 +164,12 @@
            name))))
 
 (defclass helm-ypv-bookmarks-source (helm-source-sync)
-  ((init  :initform helm-ypv-bookmark-init)
-   (candidates :initform helm-ypv-candidate-bookmarks)
+  ((init  :initform #'helm-ypv-bookmark-init)
+   (candidates :initform #'helm-ypv-candidate-bookmarks)
    (action :initform
            (helm-make-actions
-            "Open channel" 'helm-ypv-action-bookmark-open
-            "Remove bookmark" 'helm-ypv-action-bookmark-remove))))
+            "Open channel" #'helm-ypv-action-bookmark-open
+            "Remove bookmark" #'helm-ypv-action-bookmark-remove))))
 
 (defvar helm-source-ypv-bookmarks
   (helm-make-source (helm-ypv-bookmark-add-source-mark "Bookmarks")
