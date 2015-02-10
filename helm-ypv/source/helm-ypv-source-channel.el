@@ -106,7 +106,7 @@
 
 (defclass helm-ypv-channels-source (helm-source-sync)
   ((init :initform #'helm-ypv-channel-init)
-   (candidates :initform #'helm-ypv-channel-candidate-channels)
+   (candidates :initform 'helm-ypv-channel-candidate-channels)
    (action :initform
            (helm-make-actions
             "Open channel" #'helm-ypv-action-channel-open
