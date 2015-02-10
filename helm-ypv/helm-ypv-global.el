@@ -93,8 +93,8 @@
   (cl-letf ((content nil))
     (with-current-buffer buf
       (save-excursion
-        (goto-char (+ 1 url-http-end-of-headers))
-        (setq content (buffer-substring-no-properties (point) (- (point-max) 1)))
+        (goto-char (1+ url-http-end-of-headers))
+        (setq content (buffer-substring-no-properties (point) (1- (point-max))))
         (kill-buffer (current-buffer))))
     (helm-ypv-string->utf-8 content)))
 
