@@ -124,7 +124,7 @@
               channels))
 
 (cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)
-  (seq-remove (lambda (b) (eq b nil))
+  (seq-remove #'null
               (seq-map (lambda (bookmark)
                          (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
                              (helm-ypv-bookmark-set-broadcasting bookmark t)
