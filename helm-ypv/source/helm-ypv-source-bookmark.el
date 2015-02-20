@@ -78,7 +78,9 @@
                     (read (current-buffer))))
 
 (cl-defun helm-ypv-bookmark-data-file ()
-  (expand-file-name "helm-ypv-bookmarks" user-emacs-directory))
+  (expand-file-name
+   helm-ypv-bookmark-file-name
+   user-emacs-directory))
 
 
 (cl-defmethod helm-ypv-bookmark-channel->bookmark ((channel ypv-channel))
