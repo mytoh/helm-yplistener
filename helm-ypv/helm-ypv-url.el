@@ -4,13 +4,15 @@
 
 (cl-defmethod helm-ypv-make-url ((channel ypv-channel))
   (with-slots (id tracker type) channel
-    (format "http://%s/stream/%s.%s?tip=%s"
+    (format "%s://%s/stream/%s.%s?tip=%s"
+            helm-ypv-default-protocol
             helm-ypv-local-address
             id type tracker)))
 
 (cl-defmethod helm-ypv-make-url ((bkm ypv-bookmark))
   (with-slots (id tracker type) bkm
-    (format "http://%s/stream/%s.%s?tip=%s"
+    (format "%s://%s/stream/%s.%s?tip=%s"
+            helm-ypv-default-protocol
             helm-ypv-local-address
             id type tracker)))
 

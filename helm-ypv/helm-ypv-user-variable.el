@@ -31,5 +31,17 @@
   :type 'symbol
   :group 'helm-ypv)
 
+(defcustom helm-ypv-bookmark-file-name
+  "helm-ypv-bookmarks.el"
+  "file name for bookmark"
+  :type "string"
+  :group 'helm-ypv)
+
+(defcustom helm-ypv-default-protocol
+  "mmshttp"
+  "default protocol for stream url"
+  :type "string"
+  :group 'helm-ypv)
+
 ;;; Provide
 (provide 'helm-ypv-user-variable)
