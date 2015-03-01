@@ -1,7 +1,7 @@
 ;;; bookmark.el -*- lexical-binding: t -*-
 
 ;;;; Requires
-(eval-when-compile (require 'cl-lib)) ; don't use cl.el (require 'helm)
+(require 'cl-lib) ; don't use cl.el (require 'helm)
 (require 'seq)
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")

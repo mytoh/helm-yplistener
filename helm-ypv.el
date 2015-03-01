@@ -6,7 +6,7 @@
 ;;;;; Requires
 ;;;;;; General
 
-(eval-when-compile (require 'cl-lib)) ; don't use cl.el
+(require 'cl-lib) ; don't use cl.el
 (require 'helm)
 
 ;;;;;; Local library

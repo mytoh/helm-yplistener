@@ -1,7 +1,7 @@
 ;;; channel.el -*- lexical-binding: t -*-
 
 ;;;; Requires
-(eval-when-compile (require 'cl-lib)) ; don't use cl.el
+(require 'cl-lib) ; don't use cl.el
 (require 'seq)
 (require 'helm)
 ;;;;; Local
