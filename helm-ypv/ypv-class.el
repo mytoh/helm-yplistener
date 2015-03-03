@@ -10,14 +10,14 @@
        (lambda (s)
          (if (listp s)
              (list (car s)
-                   :initarg (intern (concat ":" (symbol-name (car s))))
+                   :initarg (intern (concat ":" (helm-stringify (car s))))
                    :initform (cadr s)
-                   :accessor (intern (concat (symbol-name name) "-" (symbol-name (car s)))))
+                   :accessor (intern (concat (helm-stringify name) "-" (helm-stringify (car s)))))
            (list s
-                 :initarg (intern (concat ":" (symbol-name s)))
+                 :initarg (intern (concat ":" (helm-stringify s)))
                  :initform nil
-                 :accessor (intern (concat (symbol-name name) "-"
-                                           (symbol-name
+                 :accessor (intern (concat (helm-stringify name) "-"
+                                           (helm-stringify
                                             s))))))
        slots)))
 
