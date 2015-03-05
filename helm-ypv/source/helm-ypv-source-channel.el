@@ -92,8 +92,10 @@
 (defvar helm-ypv-channel-candidate-channels nil)
 
 (cl-defun helm-ypv-channel-init ()
-  (setq helm-ypv-channel-candidate-channels
-        (helm-ypv-channel-create-candidates (helm-ypv-get/parse-channels helm-ypv-yp-urls))))
+  (thread-last helm-ypv-yp-urls
+    helm-ypv-get/parse-channels
+    helm-ypv-channel-create-candidates
+    (setq helm-ypv-channel-candidate-channels)))
 
 ;;;; Source
 
