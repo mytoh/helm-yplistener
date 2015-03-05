@@ -96,8 +96,9 @@
 
 ;;;;; Action
 (cl-defmethod helm-ypv-action-bookmark-add ((channel ypv-channel))
-  (cl-letf ((bookmark (helm-ypv-bookmark-channel->bookmark channel)))
-    (helm-ypv-bookmark-data-add bookmark (helm-ypv-bookmark-data-file))))
+    (thread-first channel
+      helm-ypv-bookmark-channel->bookmark
+      (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file))))
 
 (cl-defmethod helm-ypv-action-bookmark-remove ((bookmark ypv-bookmark))
   (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file)))
