@@ -13,6 +13,7 @@
                                       "mplayer "
                                       "'" url "'"
                                       " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
+                                      " --zoom "
                                       " &")))
     (message command)
     (start-process-shell-command "ypv" nil command)))
@@ -22,8 +23,9 @@
   (message url)
   (cl-letf ((command (seq-concatenate 'string
                                       "mpv "
+                                      "--ytdl=no --loop=inf "
+                                      ;; " -{ av://lavfi:color -length 1 -} "
                                       "'" url "'"
-                                      " --ytdl=no --loop=inf"
                                       " &")))
     (message command)
     (start-process-shell-command "ypv" nil command)))
