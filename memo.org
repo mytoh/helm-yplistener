@@ -20,6 +20,7 @@ channel.Uptime      = ParseUptime(tokens[15]); //16 BROADCAST_TIME 配信時間 
 channel.Comment     = ParseStr(tokens[17]); //18 COMMENT コメント
 #+end_quote
 
+* channel info
 #+begin_src emacs-lisp
 yp
 name
@@ -35,3 +36,11 @@ listeners
 relays
 comment
 #+end_src
+
+* playable combination
+  | player   | type | proto   |
+  |----------+------+---------|
+  | mpv      | flv  | http    |
+  | mpv      | wmv  | mmshttp |
+  | mplayer2 | flv  | http    |
+  | mplayer2 | wmv  | http    |
