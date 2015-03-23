@@ -47,7 +47,8 @@
   (cl-letf ((old (helm-ypv-bookmark-data-read file)))
     (message "updating bookmark")
     (thread-last bookmark
-      list (seq-concatenate 'list old)
+      list
+      (seq-concatenate 'list old)
       (helm-ypv-bookmark-data-write file))
     (message (format "added %s" bookmark))))
 
@@ -96,9 +97,9 @@
 
 ;;;;; Action
 (cl-defmethod helm-ypv-action-bookmark-add ((channel ypv-channel))
-    (thread-first channel
-      helm-ypv-bookmark-channel->bookmark
-      (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file))))
+  (thread-first channel
+    helm-ypv-bookmark-channel->bookmark
+    (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file))))
 
 (cl-defmethod helm-ypv-action-bookmark-remove ((bookmark ypv-bookmark))
   (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file)))
