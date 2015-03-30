@@ -2,10 +2,23 @@
 
 (cl-defun helm-ypv-player (player url)
   (pcase player
-    ('mplayer2
+    (`mplayer2
      (helm-ypv-player-mplayer2 url))
-    ('mpv
-     (helm-ypv-player-mpv url))))
+    (`mpv
+     (helm-ypv-player-mpv url))
+    (`mplayer
+     (helm-ypv-player-mplayer url))))
+
+
+(cl-defun helm-ypv-player-mplayer (url)
+  (message url)
+  (cl-letf ((command (seq-concatenate 'string
+                                      "mplayer "
+                                      "'" url "'"
+                                      " -softvol -nocache -really-quiet -noconsolecontrols "
+                                      " &")))
+    (message command)
+    (start-process-shell-command "ypv" nil command)))
 
 (cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
