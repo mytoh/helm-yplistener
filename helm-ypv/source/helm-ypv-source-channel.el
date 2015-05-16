@@ -88,7 +88,7 @@
               id
               "00000000000000000000000000000000")
              (null id)
-             (string-empty-p id)))))
+             (seq-empty-p id)))))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
