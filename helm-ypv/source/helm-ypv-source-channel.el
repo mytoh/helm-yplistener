@@ -78,8 +78,9 @@
 (cl-defmethod helm-ypv-info-channel-p ((channel ypv-channel))
   ;; return self.listeners()<-1;
   (with-slots (listeners) channel
-    (cl-letf* ((num (string-to-number listeners)))
-      (< num -1))))
+    (and (stringp listeners)
+         (cl-letf* ((num (string-to-number listeners)))
+           (< num -1)))))
 
 (cl-defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
