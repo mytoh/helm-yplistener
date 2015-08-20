@@ -87,7 +87,7 @@
   (with-slots (id) channel
     (not (or (string-equal
               id
-              "00000000000000000000000000000000")
+              (make-string 32 ?0))
              (null id)
              (seq-empty-p id)))))
 
