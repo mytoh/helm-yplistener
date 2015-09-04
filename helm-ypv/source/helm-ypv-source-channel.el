@@ -68,12 +68,13 @@
 
 (cl-defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
   (helm-ypv-add-face (ypv-channel-name channel)
-                     (cond ((helm-ypv-info-channel-p channel)
-                            'font-lock-function-name-face)
-                           ((helm-ypv-channel-playable-p channel)
-                            'helm-ypv-name)
-                           (t
-                            'font-lock-variable-name-face))))
+                     (pcase channel
+                       ((pred helm-ypv-info-channel-p)
+                        'font-lock-function-name-face)
+                       ((pred helm-ypv-channel-playable-p)
+                        'helm-ypv-name)
+                       (_
+                        'font-lock-variable-name-face))))
 
 (cl-defmethod helm-ypv-info-channel-p ((channel ypv-channel))
   ;; return self.listeners()<-1;
