@@ -55,16 +55,16 @@
                     ("&#034;" "\"")
                     ("&#039;" "'")
                     ("&amp;" "&"))))
-    (helm-ypv-replace-html-entites-helper
+    (helm-ypv-replace-html-entities-helper
      ents str)))
 
-(cl-defun helm-ypv-replace-html-entites-helper (lst str)
+(cl-defun helm-ypv-replace-html-entities-helper (lst str)
   (pcase lst
     (`nil str)
     (`((,target ,entity) . ,tail)
       (cl-letf* ((rep-str (replace-regexp-in-string
                            target entity str)))
-        (helm-ypv-replace-html-entites-helper
+        (helm-ypv-replace-html-entities-helper
          tail rep-str)))))
 
 (cl-defun helm-ypv-url-retrieve (url)
