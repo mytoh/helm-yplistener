@@ -59,14 +59,13 @@
      ents str)))
 
 (cl-defun helm-ypv-replace-html-entites-helper (lst str)
-  (if (null lst)
-      str
-    (cl-letf* ((rep (car lst))
-               (rep-str (replace-regexp-in-string
-                         (car rep) (cadr rep)
-                         str)))
-      (helm-ypv-replace-html-entites-helper
-       (cdr lst) rep-str))))
+  (pcase lst
+    (`nil str)
+    (`((,target ,entity) . ,tail)
+      (cl-letf* ((rep-str (replace-regexp-in-string
+                           target entity str)))
+        (helm-ypv-replace-html-entites-helper
+         tail rep-str)))))
 
 (cl-defun helm-ypv-url-retrieve (url)
   (helm-ypv-message "get %s" url)
