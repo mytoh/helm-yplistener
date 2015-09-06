@@ -9,10 +9,10 @@
     (`mplayer
      (helm-ypv-player-mplayer url))))
 
-
 (cl-defun helm-ypv-player-mplayer (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
+                                      "nohup "
                                       "mplayer "
                                       "'" url "'"
                                       " -softvol -nocache -really-quiet -noconsolecontrols "
@@ -23,6 +23,7 @@
 (cl-defun helm-ypv-player-mplayer2 (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
+                                      "nohup "
                                       "mplayer "
                                       "'" url "'"
                                       " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
@@ -35,6 +36,7 @@
 (cl-defun helm-ypv-player-mpv (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
+                                      "nohup "
                                       "mpv "
                                       "--no-config --ytdl=no --loop=inf "
                                       ;; " -{ av://lavfi:color -length 1 -} "
