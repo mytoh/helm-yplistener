@@ -116,8 +116,7 @@
            (helm-make-actions
             "Open channel" #'helm-ypv-action-channel-open
             "Add to bookmarks" #'helm-ypv-action-bookmark-add
-            "Copy contact url" #'helm-ypv-action-channel-copy-conctact-url))
-   (migemo :initform t)))
+            "Copy contact url" #'helm-ypv-action-channel-copy-conctact-url))))
 
 (defvar helm-source-ypv-channels
   (helm-make-source (helm-ypv-channel-add-source-mark "Channel list")

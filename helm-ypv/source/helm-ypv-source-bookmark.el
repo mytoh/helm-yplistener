@@ -173,8 +173,7 @@
    (action :initform
            (helm-make-actions
             "Open channel" #'helm-ypv-action-bookmark-open
-            "Remove bookmark" #'helm-ypv-action-bookmark-remove))
-   (migemo :initform t)))
+            "Remove bookmark" #'helm-ypv-action-bookmark-remove))))
 
 (defvar helm-source-ypv-bookmarks
   (helm-make-source (helm-ypv-bookmark-add-source-mark "Bookmarks")
