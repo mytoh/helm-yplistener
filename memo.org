@@ -42,5 +42,14 @@ comment
   |----------+------+---------|
   | mpv      | flv  | http    |
   | mpv      | wmv  | mmshttp |
+  | mpv      | mkv  | http    |
   | mplayer2 | flv  | http    |
   | mplayer2 | wmv  | http    |
+
+* json rpc
+
+#+begin_src shell
+curl --data-binary '{"jsonrpc": "2.0", "method": "getChannels", "id": 1, "x-requested-with": "XMLHttpRequest"}' http://192.168.1.24:7144/api/1
+#+end_src
+
+#+RESULTS:
