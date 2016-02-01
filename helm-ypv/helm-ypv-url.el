@@ -6,7 +6,9 @@
   (with-slots (id tracker type) channel
     (format "%s://%s/stream/%s.%s?tip=%s"
             (if (string-match (rx (or "flv"
-                                      "FLV"))
+                                      "FLV"
+                                      "mkv"
+                                      "MKV"))
                               type)
                 "http"
               helm-ypv-default-protocol)
@@ -17,7 +19,9 @@
   (with-slots (id tracker type) bkm
     (format "%s://%s/stream/%s.%s?tip=%s"
             (if (string-match (rx (or "flv"
-                                      "FLV"))
+                                      "FLV"
+                                      "MKV"
+                                      "mkv"))
                               type)
                 "http"
               helm-ypv-default-protocol)
