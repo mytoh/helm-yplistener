@@ -4,9 +4,11 @@
 
 (require 'seq)
 
+(require 'colle)
+
 (cl-defmacro ypv-defclass (name slots)
   `(defclass ,name ()
-     ,(seq-map
+     ,(colle:map
        (lambda (s)
          (if (listp s)
              (list (car s)

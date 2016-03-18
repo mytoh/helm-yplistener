@@ -3,6 +3,9 @@
 ;;;; Requires
 (require 'cl-lib) ; don't use cl.el (require 'helm)
 (require 'seq)
+
+(require 'colle)
+
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
 (require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
@@ -129,11 +132,11 @@
 
 (cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)
   (seq-remove #'null
-              (seq-map (lambda (bookmark)
-                         (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
-                             (helm-ypv-bookmark-set-broadcasting bookmark t)
-                           (helm-ypv-bookmark-set-broadcasting bookmark nil)))
-                       bookmarks)))
+              (colle:map (lambda (bookmark)
+                        (if (helm-ypv-bookmark-channel-broadcasting-p bookmark channels)
+                            (helm-ypv-bookmark-set-broadcasting bookmark t)
+                          (helm-ypv-bookmark-set-broadcasting bookmark nil)))
+                      bookmarks)))
 
 (cl-defmethod helm-ypv-bookmark-set-broadcasting ((obj ypv-bookmark) value)
   (setf (ypv-bookmark-broadcasting obj) value)

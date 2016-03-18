@@ -4,6 +4,9 @@
 (require 'cl-lib) ; don't use cl.el
 (require 'seq)
 (require 'helm)
+
+(require 'colle)
+
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
 (require 'helm-ypv-global "helm-ypv/helm-ypv-global")
@@ -29,7 +32,7 @@
 
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
-  (seq-map
+  (colle:map
    (lambda (info)
      (cons
       ;; display candidate
@@ -80,17 +83,17 @@
   ;; return self.listeners()<-1;
   (with-slots (listeners) channel
     (and (stringp listeners)
-         (cl-letf* ((num (string-to-number listeners)))
-           (< num -1)))))
+       (cl-letf* ((num (string-to-number listeners)))
+         (< num -1)))))
 
 (cl-defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
   (with-slots (id) channel
     (not (or (string-equal
-              id
-              (make-string 32 ?0))
-             (null id)
-             (seq-empty-p id)))))
+           id
+           (make-string 32 ?0))
+          (null id)
+          (seq-empty-p id)))))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 

@@ -6,6 +6,9 @@
 (require 'helm-utils)
 (require 'url)
 (require 'seq)
+
+(require 'colle)
+
 ;;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
 
@@ -17,7 +20,7 @@
   (cl-letf* ((yp-name (car info))
              (content (cadr info))
              (channels (split-string content "\n")))
-    (seq-map
+    (colle:map
      (lambda (x)
        (helm-ypv-info->channel
         (seq-concatenate 'list
@@ -83,7 +86,7 @@
     nil))
 
 (cl-defun helm-ypv-get-channels (yp-info)
-  (seq-map
+  (colle:map
    #'helm-ypv-get-channel
    yp-info))
 
