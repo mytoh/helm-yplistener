@@ -76,7 +76,7 @@
                   (url-retrieve-synchronously url 'silent 'inhibit-cookies))))
     (if (helm-ypv-empty-response-p res)
         nil
-      (helm-ypv-replace-html-entities res))))
+      (helm-html-decode-entities-string res))))
 
 (cl-defun helm-ypv-get-channel (info)
   (if-let ((res (thread-first (cadr info)
