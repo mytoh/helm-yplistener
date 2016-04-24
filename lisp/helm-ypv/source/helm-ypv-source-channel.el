@@ -18,7 +18,7 @@
 (require 'helm-ypv-source-bookmark "helm-ypv/source/helm-ypv-source-bookmark")
 
 ;;;; Action
-(cl-defmethod helm-ypv-action-channel-open ((channel ypv-channel))
+(cl-defun helm-ypv-action-channel-open (channel)
   (cl-letf ((url (helm-ypv-make-url `[:channel ,channel])))
     (thread-first channel
       helm-ypv-bookmark-channel->bookmark
