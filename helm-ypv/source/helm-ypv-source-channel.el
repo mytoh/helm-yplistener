@@ -19,7 +19,7 @@
 
 ;;;; Action
 (cl-defmethod helm-ypv-action-channel-open ((channel ypv-channel))
-  (cl-letf ((url (helm-ypv-make-url channel)))
+  (cl-letf ((url (helm-ypv-make-url `[:channel ,channel])))
     (thread-first channel
       helm-ypv-bookmark-channel->bookmark
       (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file)))

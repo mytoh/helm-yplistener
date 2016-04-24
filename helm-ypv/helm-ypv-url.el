@@ -2,7 +2,15 @@
 
 ;;; Code:
 
-(cl-defmethod helm-ypv-make-url ((channel ypv-channel))
+(cl-defun helm-ypv-make-url (thing)
+  (pcase thing
+    (`[:bookmark ,b]
+      (helm-ypv-make-url-bookmark b))
+    (`[:channel ,c]
+      (helm-ypv-make-url-channel c))))
+
+
+(cl-defun helm-ypv-make-url-channel (channel)
   (with-slots (id tracker type) channel
     (format "%s://%s/stream/%s.%s?tip=%s"
             (if (string-match-p (rx (or "flv"
@@ -15,7 +23,7 @@
             helm-ypv-local-address
             id type tracker)))
 
-(cl-defmethod helm-ypv-make-url ((bkm ypv-bookmark))
+(cl-defun helm-ypv-make-url-bookmark (bkm)
   (with-slots (id tracker type) bkm
     (format "%s://%s/stream/%s.%s?tip=%s"
             (if (string-match-p (rx (or "flv"

@@ -108,7 +108,7 @@
   (helm-ypv-bookmark-data-remove bookmark (helm-ypv-bookmark-data-file)))
 
 (cl-defmethod helm-ypv-action-bookmark-open ((bookmark ypv-bookmark))
-  (cl-letf ((url (helm-ypv-make-url bookmark)))
+  (cl-letf ((url (helm-ypv-make-url `[:bookmark ,bookmark])))
     (helm-ypv-bookmark-data-update bookmark (helm-ypv-bookmark-data-file))
     (helm-ypv-player helm-ypv-player-type url)))
 
