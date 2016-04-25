@@ -96,14 +96,14 @@
               (contact :contact)
               (type :type))
              channel)
-            (make-instance 'ypv-bookmark
-                           :yp yp
-                           :name name
-                           :id id
-                           :tracker tracker
-                           :contact contact
-                           :type type
-                           :broadcasting nil)))
+    (make-instance 'ypv-bookmark
+                   :yp yp
+                   :name name
+                   :id id
+                   :tracker tracker
+                   :contact contact
+                   :type type
+                   :broadcasting nil)))
 
 ;;;;; Action
 (cl-defun helm-ypv-action-bookmark-add (channel)

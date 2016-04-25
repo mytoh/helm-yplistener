@@ -17,16 +17,16 @@
               (tracker :tracker)
               (type :type))
              channel)
-            (format "%s://%s/stream/%s.%s?tip=%s"
-                    (if (string-match-p (rx (or "flv"
-                                               "FLV"
-                                               "mkv"
-                                               "MKV"))
-                                        type)
-                        "http"
-                      helm-ypv-default-protocol)
-                    helm-ypv-local-address
-                    id type tracker)))
+    (format "%s://%s/stream/%s.%s?tip=%s"
+            (if (string-match-p (rx (or "flv"
+                                       "FLV"
+                                       "mkv"
+                                       "MKV"))
+                                type)
+                "http"
+              helm-ypv-default-protocol)
+            helm-ypv-local-address
+            id type tracker)))
 
 (cl-defun helm-ypv-make-url-bookmark (bkm)
   (with-slots (id tracker type) bkm
