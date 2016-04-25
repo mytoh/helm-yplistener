@@ -8,6 +8,7 @@
 (require 'seq)
 
 (require 'colle)
+(require 'glof)
 
 ;;;;;; Local
 (require 'helm-ypv-user-variable "helm-ypv/helm-ypv-user-variable")
@@ -36,20 +37,20 @@
          text))
 
 (cl-defun helm-ypv-info->channel (info)
-  (make-instance 'ypv-channel
-                 :yp (helm-stringify (seq-elt info 0))
-                 :name (seq-elt info 1)
-                 :id (seq-elt info 2)
-                 :tracker (seq-elt info 3)
-                 :contact (seq-elt info 4)
-                 :genre (seq-elt info 5)
-                 :desc (seq-elt info 6)
-                 :bitrate (seq-elt info 9)
-                 :type (seq-elt info 10)
-                 :uptime (seq-elt info 16)
-                 :listeners (seq-elt info 7)
-                 :relays (seq-elt info 8)
-                 :comment (seq-elt info 18)))
+  (glof:plist
+   :yp (helm-stringify (seq-elt info 0))
+   :name (seq-elt info 1)
+   :id (seq-elt info 2)
+   :tracker (seq-elt info 3)
+   :contact (seq-elt info 4)
+   :genre (seq-elt info 5)
+   :desc (seq-elt info 6)
+   :bitrate (seq-elt info 9)
+   :type (seq-elt info 10)
+   :uptime (seq-elt info 16)
+   :listeners (seq-elt info 7)
+   :relays (seq-elt info 8)
+   :comment (seq-elt info 18)))
 
 (cl-defun helm-ypv-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")

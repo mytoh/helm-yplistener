@@ -2,6 +2,8 @@
 
 ;;; Code:
 
+(require 'glof)
+
 (cl-defun helm-ypv-make-url (thing)
   (pcase thing
     (`[:bookmark ,b]
@@ -11,17 +13,20 @@
 
 
 (cl-defun helm-ypv-make-url-channel (channel)
-  (with-slots (id tracker type) channel
-    (format "%s://%s/stream/%s.%s?tip=%s"
-            (if (string-match-p (rx (or "flv"
-                                       "FLV"
-                                       "mkv"
-                                       "MKV"))
-                                type)
-                "http"
-              helm-ypv-default-protocol)
-            helm-ypv-local-address
-            id type tracker)))
+  (glof:let (((id :id)
+              (tracker :tracker)
+              (type :type))
+             channel)
+            (format "%s://%s/stream/%s.%s?tip=%s"
+                    (if (string-match-p (rx (or "flv"
+                                               "FLV"
+                                               "mkv"
+                                               "MKV"))
+                                        type)
+                        "http"
+                      helm-ypv-default-protocol)
+                    helm-ypv-local-address
+                    id type tracker)))
 
 (cl-defun helm-ypv-make-url-bookmark (bkm)
   (with-slots (id tracker type) bkm

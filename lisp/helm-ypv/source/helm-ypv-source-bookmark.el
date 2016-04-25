@@ -5,6 +5,7 @@
 (require 'seq)
 
 (require 'colle)
+(require 'glof)
 
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
@@ -88,15 +89,21 @@
 
 
 (cl-defun helm-ypv-bookmark-channel->bookmark (channel)
-  (with-slots (yp name id tracker contact type) channel
-    (make-instance 'ypv-bookmark
-                   :yp yp
-                   :name name
-                   :id id
-                   :tracker tracker
-                   :contact contact
-                   :type type
-                   :broadcasting nil)))
+  (glof:let (((yp :yp)
+              (name :name)
+              (id :id)
+              (tracker :tracker)
+              (contact :contact)
+              (type :type))
+             channel)
+            (make-instance 'ypv-bookmark
+                           :yp yp
+                           :name name
+                           :id id
+                           :tracker tracker
+                           :contact contact
+                           :type type
+                           :broadcasting nil)))
 
 ;;;;; Action
 (cl-defun helm-ypv-action-bookmark-add (channel)
@@ -127,7 +134,7 @@
 (cl-defun helm-ypv-bookmark-channel-broadcasting-p (bookmark channels)
   (cl-find-if (lambda (channel)
                 (equal (eieio-oref bookmark 'id)
-                       (eieio-oref channel 'id)))
+                       (glof:get channel :id)))
               channels))
 
 (cl-defun helm-ypv-bookmark-find-broadcasting-channels (bookmarks channels)

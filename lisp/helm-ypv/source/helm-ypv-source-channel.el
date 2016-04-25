@@ -6,6 +6,7 @@
 (require 'helm)
 
 (require 'colle)
+(require 'glof)
 
 ;;;;; Local
 (require 'ypv-class "helm-ypv/ypv-class")
@@ -26,9 +27,10 @@
     (helm-ypv-player helm-ypv-player-type url)))
 
 (cl-defun helm-ypv-action-channel-copy-conctact-url (channel)
-  (with-slots (contact) channel
-    (kill-new contact)
-    (message "copy %s" contact)))
+  (glof:let (((contact :contact))
+             channel)
+            (kill-new contact)
+            (message "copy %s" contact)))
 
 ;;;; Canditate
 (cl-defun helm-ypv-channel-create-candidates (channels)
@@ -42,35 +44,45 @@
    channels))
 
 (cl-defun helm-ypv-channel-create-display-candidate (channel)
-  (with-slots (genre desc contact type bitrate uptime
-                     comment listeners relays yp)
-      channel
-    (cl-letf ((name (helm-ypv-modify-channel-name channel))
-              (genre (helm-ypv-add-face genre 'helm-ypv-genre))
-              (desc (helm-ypv-add-face desc 'helm-ypv-desc))
-              (contact (helm-ypv-add-face contact 'helm-ypv-contact))
-              (type (helm-ypv-add-face type 'helm-ypv-type))
-              (bitrate (helm-ypv-add-face bitrate 'helm-ypv-bitrate))
-              (uptime (helm-ypv-add-face uptime 'helm-ypv-uptime))
-              (comment (helm-ypv-add-face comment 'helm-ypv-comment))
-              (lr (helm-ypv-add-face
-                   (concat listeners "/" relays) 'helm-ypv-lr)))
-      (format "%-16.16s %-8.8s %-40.40s %-40.40s %+4s %+4s %7s %s %s %s"
-              name
-              genre
-              desc
-              comment
-              bitrate
-              uptime
-              lr
-              type
-              yp
-              ;; (if (string-empty-p comment) "" comment)
-              contact
-              ))))
+  (glof:let (((genre :genre)
+              (desc :desc)
+              (contact :contact)
+              (bitrate :bitrate)
+              (uptime :uptime)
+              (comment :comment)
+              (listeners :listeners)
+              (relays :relays)
+              (yp :yp)
+              (type :type))
+             channel)
+            ;; (genre desc contact type bitrate uptime
+            ;;        comment listeners relays yp)
+            (cl-letf ((name (helm-ypv-modify-channel-name channel))
+                      (genre (helm-ypv-add-face genre 'helm-ypv-genre))
+                      (desc (helm-ypv-add-face desc 'helm-ypv-desc))
+                      (contact (helm-ypv-add-face contact 'helm-ypv-contact))
+                      (type (helm-ypv-add-face type 'helm-ypv-type))
+                      (bitrate (helm-ypv-add-face bitrate 'helm-ypv-bitrate))
+                      (uptime (helm-ypv-add-face uptime 'helm-ypv-uptime))
+                      (comment (helm-ypv-add-face comment 'helm-ypv-comment))
+                      (lr (helm-ypv-add-face
+                           (concat listeners "/" relays) 'helm-ypv-lr)))
+              (format "%-16.16s %-8.8s %-40.40s %-40.40s %+4s %+4s %7s %s %s %s"
+                      name
+                      genre
+                      desc
+                      comment
+                      bitrate
+                      uptime
+                      lr
+                      type
+                      yp
+                      ;; (if (string-empty-p comment) "" comment)
+                      contact
+                      ))))
 
 (cl-defun helm-ypv-modify-channel-name (channel)
-  (helm-ypv-add-face (eieio-oref channel 'name)
+  (helm-ypv-add-face (glof:get channel :name)
                      (pcase channel
                        ((pred helm-ypv-info-channel-p)
                         'font-lock-function-name-face)
@@ -81,19 +93,21 @@
 
 (cl-defun helm-ypv-info-channel-p (channel)
   ;; return self.listeners()<-1;
-  (with-slots (listeners) channel
-    (and (stringp listeners)
-       (cl-letf* ((num (string-to-number listeners)))
-         (< num -1)))))
+  (glof:let (((listeners :listeners))
+             channel)
+            (and (stringp listeners)
+               (cl-letf* ((num (string-to-number listeners)))
+                 (< num -1)))))
 
 (cl-defun helm-ypv-channel-playable-p (channel)
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
-  (with-slots (id) channel
-    (not (or (string-equal
-           id
-           (make-string 32 ?0))
-          (null id)
-          (seq-empty-p id)))))
+  (glof:let (((id :id))
+             channel)
+            (not (or (string-equal
+                   id
+                   (make-string 32 ?0))
+                  (null id)
+                  (seq-empty-p id)))))
 
 (defvar helm-ypv-channel-candidate-channels nil)
 
