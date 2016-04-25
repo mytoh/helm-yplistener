@@ -29,7 +29,10 @@
             id type tracker)))
 
 (cl-defun helm-ypv-make-url-bookmark (bkm)
-  (with-slots (id tracker type) bkm
+  (glof:let (((id :id)
+              (tracker :tracker)
+              (type :type))
+             bkm)
     (format "%s://%s/stream/%s.%s?tip=%s"
             (if (string-match-p (rx (or "flv"
                                        "FLV"

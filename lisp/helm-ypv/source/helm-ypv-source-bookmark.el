@@ -22,12 +22,12 @@
 ;;;;; Utils
 
 (cl-defun helm-ypv-bookmark-equal-id (bmk1 bmk2)
-  (equal (eieio-oref bmk1 'id)
-         (eieio-oref bmk2 'id)))
+  (equal (glof:get bmk1 :id)
+         (glof:get bmk2 :id)))
 
 (cl-defun helm-ypv-bookmark-equal-name (bmk1 bmk2)
-  (equal (eieio-oref bmk1 'name)
-         (eieio-oref bmk2 'name)))
+  (equal (glof:get bmk1 :name)
+         (glof:get bmk2 :name)))
 
 (cl-defun helm-ypv-bookmark-remove-if-name (new-bookmark bookmarks)
   (seq-remove (lambda (old-bookmark)
@@ -98,14 +98,13 @@
               (contact :contact)
               (type :type))
              channel)
-    (make-instance 'ypv-bookmark
-                   :yp yp
-                   :name name
-                   :id id
-                   :tracker tracker
-                   :contact contact
-                   :type type
-                   :broadcasting nil)))
+    (glof:plist :yp yp
+                :name name
+                :id id
+                :tracker tracker
+                :contact contact
+                :type type
+                :broadcasting nil)))
 
 (cl-defun helm-ypv-ensure-bookmark-directory (path)
   (unless (file-exists-p path)
@@ -131,18 +130,18 @@
 ;;;;; Candidate
 (cl-defun helm-ypv-bookmark-create-display-candidate (bookmark)
   (cl-letf ((format-string "%-17.17s %s")
-            (name (helm-ypv-add-face (eieio-oref bookmark 'name)
-                                     (if (eieio-oref bookmark 'broadcasting)
+            (name (helm-ypv-add-face (glof:get bookmark :name)
+                                     (if (glof:get bookmark :broadcasting)
                                          'helm-ypv-name
                                        'font-lock-comment-face)))
-            (id (helm-ypv-add-face (eieio-oref bookmark 'id) 'helm-ypv-id)))
+            (id (helm-ypv-add-face (glof:get bookmark :id) 'helm-ypv-id)))
     (format format-string
             name
             id)))
 
 (cl-defun helm-ypv-bookmark-channel-broadcasting-p (bookmark channels)
   (cl-find-if (lambda (channel)
-                (equal (eieio-oref bookmark 'id)
+                (equal (glof:get bookmark :id)
                        (glof:get channel :id)))
               channels))
 
@@ -155,8 +154,8 @@
                       bookmarks)))
 
 (cl-defun helm-ypv-bookmark-set-broadcasting (obj value)
-  (setf (eieio-oref obj 'broadcasting) value)
-  obj)
+  (glof:assoc obj
+              :broadcasting value))
 
 (cl-defun helm-ypv-bookmark-create-candidates (channels)
   (if (not (file-exists-p (helm-ypv-bookmark-data-file)))
