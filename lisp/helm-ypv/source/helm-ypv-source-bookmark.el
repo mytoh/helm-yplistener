@@ -85,7 +85,9 @@
 (cl-defun helm-ypv-bookmark-data-file ()
   (expand-file-name
    helm-ypv-bookmark-file-name
-   user-emacs-directory))
+   (expand-file-name
+    helm-ypv-bookmark-directory-name
+    user-emacs-directory)))
 
 
 (cl-defun helm-ypv-bookmark-channel->bookmark (channel)
@@ -105,8 +107,15 @@
                    :type type
                    :broadcasting nil)))
 
+(cl-defun helm-ypv-ensure-bookmark-directory (path)
+  (unless (file-exists-p path)
+    (make-directory path)))
+
+
 ;;;;; Action
 (cl-defun helm-ypv-action-bookmark-add (channel)
+  (helm-ypv-ensure-bookmark-directory
+   (file-name-directory (helm-ypv-bookmark-data-file)))
   (thread-first channel
     helm-ypv-bookmark-channel->bookmark
     (helm-ypv-bookmark-data-add (helm-ypv-bookmark-data-file))))

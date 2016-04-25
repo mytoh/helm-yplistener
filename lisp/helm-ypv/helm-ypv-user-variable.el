@@ -32,7 +32,13 @@
   :group 'helm-ypv)
 
 (defcustom helm-ypv-bookmark-file-name
-  "helm-ypv-bookmarks.el"
+  "bookmarks.el"
+  "file name for bookmark"
+  :type "string"
+  :group 'helm-ypv)
+
+(defcustom helm-ypv-bookmark-directory-name
+  "helm-ypv"
   "file name for bookmark"
   :type "string"
   :group 'helm-ypv)
