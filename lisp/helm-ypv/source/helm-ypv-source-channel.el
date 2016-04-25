@@ -25,7 +25,7 @@
       (helm-ypv-bookmark-data-update (helm-ypv-bookmark-data-file)))
     (helm-ypv-player helm-ypv-player-type url)))
 
-(cl-defmethod helm-ypv-action-channel-copy-conctact-url ((channel ypv-channel))
+(cl-defun helm-ypv-action-channel-copy-conctact-url (channel)
   (with-slots (contact) channel
     (kill-new contact)
     (message "copy %s" contact)))
@@ -36,12 +36,12 @@
    (lambda (info)
      (cons
       ;; display candidate
-      (helm-ypv-create-display-candidate info)
+      (helm-ypv-channel-create-display-candidate info)
       ;; real candidate
       info))
    channels))
 
-(cl-defmethod helm-ypv-create-display-candidate ((channel ypv-channel))
+(cl-defun helm-ypv-channel-create-display-candidate (channel)
   (with-slots (genre desc contact type bitrate uptime
                      comment listeners relays yp)
       channel
@@ -69,8 +69,8 @@
               contact
               ))))
 
-(cl-defmethod helm-ypv-modify-channel-name ((channel ypv-channel))
-  (helm-ypv-add-face (ypv-channel-name channel)
+(cl-defun helm-ypv-modify-channel-name (channel)
+  (helm-ypv-add-face (eieio-oref channel 'name)
                      (pcase channel
                        ((pred helm-ypv-info-channel-p)
                         'font-lock-function-name-face)
@@ -79,14 +79,14 @@
                        (_
                         'font-lock-variable-name-face))))
 
-(cl-defmethod helm-ypv-info-channel-p ((channel ypv-channel))
+(cl-defun helm-ypv-info-channel-p (channel)
   ;; return self.listeners()<-1;
   (with-slots (listeners) channel
     (and (stringp listeners)
        (cl-letf* ((num (string-to-number listeners)))
          (< num -1)))))
 
-(cl-defmethod helm-ypv-channel-playable-p ((channel ypv-channel))
+(cl-defun helm-ypv-channel-playable-p (channel)
   ;; if (channel_id==null || channel_id==="" || channel_id===) return false;
   (with-slots (id) channel
     (not (or (string-equal
