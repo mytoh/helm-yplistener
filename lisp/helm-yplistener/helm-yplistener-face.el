@@ -2,62 +2,62 @@
 
 ;;;; Helper Function
 
-(cl-defun helm-ypv-add-face (str face)
+(cl-defun helm-yplistener-add-face (str face)
   (if str
       (propertize str 'face face)
     ""))
 
 ;;;; Faces
 
-(defface helm-ypv-name
+(defface helm-yplistener-name
     '((t :inherit font-lock-type-face))
   "face for channel name"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-genre
+(defface helm-yplistener-genre
     '((t :inherit font-lock-keyword-face))
   "face for channel genre"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-desc
+(defface helm-yplistener-desc
     '((t :inherit font-lock-string-face))
   "face for channel description"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-contact
+(defface helm-yplistener-contact
     '((t :inherit font-lock-variable-name-face))
   "face for channel contact url"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-type
+(defface helm-yplistener-type
     '((t :inherit font-lock-type-face))
   "face for channel type"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-bitrate
+(defface helm-yplistener-bitrate
     '((t :inherit font-lock-preprocessor-face))
   "face for channel bitrate"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-uptime
+(defface helm-yplistener-uptime
     '((t :inherit font-lock-preprocessor-face))
   "face for channel uptime"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-comment
+(defface helm-yplistener-comment
     '((t :inherit font-lock-doc-face))
   "face for channel comment"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-id
+(defface helm-yplistener-id
     '((t :inherit font-lock-function-name-face))
   "face for channel id"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defface helm-ypv-lr
+(defface helm-yplistener-lr
     '((t :inherit font-lock-builtin-face))
   "face for channel listeners number"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
 ;;;; Provide
-(provide 'helm-ypv-face)
+(provide 'helm-yplistener-face)

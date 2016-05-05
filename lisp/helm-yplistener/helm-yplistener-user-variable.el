@@ -1,12 +1,12 @@
 ;;; user-variable.el -*- lexical-binding: t -*-
 
 ;;;;; Group
-(defgroup helm-ypv nil
+(defgroup helm-yplistener nil
   "yellow ppage viewer with helm interface"
   :group 'helm)
 
 ;;;;; Custom
-(defcustom helm-ypv-yp-urls
+(defcustom helm-yplistener-yp-urls
   '((sp  "bayonet.ddo.jp/sp")
     (tp  "temp.orz.hm/yp")
     ;; (dp  "dp.prgrssv.net")
@@ -17,37 +17,37 @@
     (message "peercast.takami98.net/message-yp"))
   "Yellow Page urls"
   :type 'list
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defcustom helm-ypv-local-address
+(defcustom helm-yplistener-local-address
   "localhost:7144"
   "local PeerCast addr:port"
   :type 'string
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defcustom helm-ypv-player-type
+(defcustom helm-yplistener-player-type
   'mplayer2
   "player type"
   :type 'symbol
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defcustom helm-ypv-bookmark-file-name
+(defcustom helm-yplistener-bookmark-file-name
   "bookmarks.el"
   "file name for bookmark"
   :type "string"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defcustom helm-ypv-bookmark-directory-name
-  "helm-ypv"
+(defcustom helm-yplistener-bookmark-directory-name
+  "helm-yplistener"
   "file name for bookmark"
   :type "string"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
-(defcustom helm-ypv-default-protocol
+(defcustom helm-yplistener-default-protocol
   "mmshttp"
   "default protocol for stream url"
   :type "string"
-  :group 'helm-ypv)
+  :group 'helm-yplistener)
 
 ;;; Provide
-(provide 'helm-ypv-user-variable)
+(provide 'helm-yplistener-user-variable)

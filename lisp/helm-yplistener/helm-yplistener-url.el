@@ -4,15 +4,15 @@
 
 (require 'glof)
 
-(cl-defun helm-ypv-make-url (thing)
+(cl-defun helm-yplistener-make-url (thing)
   (pcase thing
     (`[:bookmark ,b]
-      (helm-ypv-make-url-bookmark b))
+      (helm-yplistener-make-url-bookmark b))
     (`[:channel ,c]
-      (helm-ypv-make-url-channel c))))
+      (helm-yplistener-make-url-channel c))))
 
 
-(cl-defun helm-ypv-make-url-channel (channel)
+(cl-defun helm-yplistener-make-url-channel (channel)
   (glof:let (((id :id)
               (tracker :tracker)
               (type :type))
@@ -24,11 +24,11 @@
                                        "MKV"))
                                 type)
                 "http"
-              helm-ypv-default-protocol)
-            helm-ypv-local-address
+              helm-yplistener-default-protocol)
+            helm-yplistener-local-address
             id type tracker)))
 
-(cl-defun helm-ypv-make-url-bookmark (bkm)
+(cl-defun helm-yplistener-make-url-bookmark (bkm)
   (glof:let (((id :id)
               (tracker :tracker)
               (type :type))
@@ -40,10 +40,10 @@
                                        "mkv"))
                                 type)
                 "http"
-              helm-ypv-default-protocol)
-            helm-ypv-local-address
+              helm-yplistener-default-protocol)
+            helm-yplistener-local-address
             id type tracker)))
 
-(provide 'helm-ypv-url)
+(provide 'helm-yplistener-url)
 
 ;;; url.el ends here
