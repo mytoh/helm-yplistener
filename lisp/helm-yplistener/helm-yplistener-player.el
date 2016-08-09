@@ -2,11 +2,11 @@
 
 (cl-defun helm-yplistener-player (player url)
   (pcase player
-    (`mplayer2
+    (:mplayer2
      (helm-yplistener-player-mplayer2 url))
-    (`mpv
+    (:mpv
      (helm-yplistener-player-mpv url))
-    (`mplayer
+    (:mplayer
      (helm-yplistener-player-mplayer url))))
 
 (cl-defun helm-yplistener-player-mplayer (url)
