@@ -35,7 +35,7 @@
   (message url)
   (cl-letf ((command (seq-concatenate 'string
                                       "mpv "
-                                      "--no-config --ytdl=no --loop=inf --force-window "
+                                      " --ytdl=no "
                                       ;; " -{ av://lavfi:color -length 1 -} "
                                       "'" url "'"
                                       " &")))
