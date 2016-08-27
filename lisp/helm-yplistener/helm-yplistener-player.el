@@ -12,21 +12,21 @@
 (cl-defun helm-yplistener-player-mplayer (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
-                                      "nohup mplayer "
+                                      "mplayer "
                                       "'" url "'"
                                       " -softvol -nocache -really-quiet -noconsolecontrols "
-                                      " > /dev/null")))
+                                      " &")))
     (message command)
     (start-process-shell-command "yplistener" nil command)))
 
 (cl-defun helm-yplistener-player-mplayer2 (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
-                                      "nohup mplayer "
+                                      "mplayer "
                                       "'" url "'"
                                       " --softvol --autosync=1 --nocache --framedrop --really-quiet --no-consolecontrols --use-filename-title"
                                       " --zoom "
-                                      " > /dev/null")))
+                                      " &")))
     (message command)
     (start-process-shell-command "yplistener" nil command)))
 
@@ -34,11 +34,11 @@
 (cl-defun helm-yplistener-player-mpv (url)
   (message url)
   (cl-letf ((command (seq-concatenate 'string
-                                      "nohup mpv "
+                                      "mpv "
                                       " --ytdl=no "
                                       ;; " -{ av://lavfi:color -length 1 -} "
                                       "'" url "'"
-                                      " > /dev/null")))
+                                      " &")))
     (message command)
     (start-process-shell-command "yplistener" nil command)))
 
