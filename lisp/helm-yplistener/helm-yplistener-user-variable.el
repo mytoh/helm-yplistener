@@ -20,7 +20,8 @@
   :group 'helm-yplistener)
 
 (defcustom helm-yplistener-local-address
-  "localhost:7144"
+  '(:host "localhost"
+    :port 7144)
   "local PeerCast addr:port"
   :type 'string
   :group 'helm-yplistener)

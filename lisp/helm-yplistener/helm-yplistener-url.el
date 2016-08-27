@@ -17,7 +17,7 @@
               (tracker :tracker)
               (type :type))
              channel)
-    (format "%s://%s/stream/%s.%s?tip=%s"
+    (format "%s://%s:%s/stream/%s.%s?tip=%s"
             (if (string-match-p (rx (or "flv"
                                        "FLV"
                                        "mkv"
@@ -25,7 +25,10 @@
                                 type)
                 "http"
               helm-yplistener-default-protocol)
-            helm-yplistener-local-address
+            (glof:get helm-yplistener-local-address
+                      :host)
+            (glof:get helm-yplistener-local-address
+                      :port)
             id type tracker)))
 
 (cl-defun helm-yplistener-make-url-bookmark (bkm)
@@ -33,7 +36,7 @@
               (tracker :tracker)
               (type :type))
              bkm)
-    (format "%s://%s/stream/%s.%s?tip=%s"
+    (format "%s://%s:%s/stream/%s.%s?tip=%s"
             (if (string-match-p (rx (or "flv"
                                        "FLV"
                                        "MKV"
@@ -41,7 +44,10 @@
                                 type)
                 "http"
               helm-yplistener-default-protocol)
-            helm-yplistener-local-address
+            (glof:get helm-yplistener-local-address
+                      :host)
+            (glof:get helm-yplistener-local-address
+                      :port)
             id type tracker)))
 
 (provide 'helm-yplistener-url)
