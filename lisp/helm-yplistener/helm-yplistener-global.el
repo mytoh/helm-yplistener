@@ -37,20 +37,24 @@
          text))
 
 (cl-defun helm-yplistener-info->channel (info)
-  (glof:plist
-   :yp (helm-stringify (seq-elt info 0))
-   :name (seq-elt info 1)
-   :id (seq-elt info 2)
-   :tracker (seq-elt info 3)
-   :contact (seq-elt info 4)
-   :genre (seq-elt info 5)
-   :desc (seq-elt info 6)
-   :bitrate (seq-elt info 9)
-   :type (seq-elt info 10)
-   :uptime (seq-elt info 16)
-   :listeners (seq-elt info 7)
-   :relays (seq-elt info 8)
-   :comment (seq-elt info 18)))
+  (pcase-let ((`(,yp ,name ,id ,tracker ,contact ,genre
+                     ,desc ,listeners ,relays ,bitrate ,type ,_ ,_ ,_ ,_ ,_
+                     ,uptime ,_ ,comment . ,_)
+                info))
+    (glof:plist
+     :yp (helm-stringify yp)
+     :name name
+     :id id
+     :tracker tracker
+     :contact contact
+     :genre genre
+     :desc desc
+     :bitrate bitrate
+     :type type
+     :uptime uptime
+     :listeners listeners
+     :relays relays
+     :comment comment)))
 
 (cl-defun helm-yplistener-replace-html-entities (str)
   (cl-letf ((ents '(("&lt;" "<")
