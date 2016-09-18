@@ -99,7 +99,7 @@
   ;; remove header info, [[frozenlock.org/2012/07/07/url-retrieve-and-json-api]]
   (cl-letf ((content nil))
     (with-current-buffer buf
-      (save-excursion
+      (save-mark-and-excursion
         (goto-char (1+ url-http-end-of-headers))
         (setq content (buffer-substring-no-properties (point) (1- (point-max))))
         (kill-buffer nil)))
