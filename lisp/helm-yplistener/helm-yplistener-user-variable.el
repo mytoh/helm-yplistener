@@ -16,18 +16,18 @@
     (event "eventyp.xrea.jp")
     (message "peercast.takami98.net/message-yp"))
   "Yellow Page urls"
-  :type 'list
+  :type '(alist :key-type symbol :value-type (group string))
   :group 'helm-yplistener)
 
 (defcustom helm-yplistener-local-address
   '(:host "localhost"
     :port 7144)
   "local PeerCast addr:port"
-  :type 'string
+  :type '(plist)
   :group 'helm-yplistener)
 
 (defcustom helm-yplistener-player-type
-  'mplayer2
+  :mplayer2
   "player type"
   :type 'symbol
   :group 'helm-yplistener)
@@ -35,13 +35,13 @@
 (defcustom helm-yplistener-bookmark-file-name
   "bookmarks.el"
   "file name for bookmark"
-  :type "string"
+  :type 'string
   :group 'helm-yplistener)
 
 (defcustom helm-yplistener-bookmark-directory-name
   "helm-yplistener"
   "file name for bookmark"
-  :type "string"
+  :type 'string
   :group 'helm-yplistener)
 
 (defcustom helm-yplistener-default-protocol
