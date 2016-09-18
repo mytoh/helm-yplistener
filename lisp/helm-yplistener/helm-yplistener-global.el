@@ -114,9 +114,8 @@
   (decode-coding-string str 'utf-8-unix))
 
 (cl-defun helm-yplistener-get/parse-channels (yp-infos)
-  (cl-mapcan
-   #'helm-yplistener-parse-channels
-   (cl-remove nil (helm-yplistener-get-channels yp-infos))))
+  (seq-mapcat #'helm-yplistener-parse-channels
+              (seq-remove #'null (helm-yplistener-get-channels yp-infos))))
 
 
 ;;; Provide
