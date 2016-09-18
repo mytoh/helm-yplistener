@@ -102,7 +102,7 @@
       (save-mark-and-excursion
         (goto-char (1+ url-http-end-of-headers))
         (setq content (buffer-substring-no-properties (point) (1- (point-max))))
-        (kill-buffer nil)))
+        (kill-buffer)))
     (helm-yplistener-string->utf-8 content)))
 
 (cl-defun helm-yplistener-empty-response-p (str)
