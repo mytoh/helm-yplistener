@@ -3,12 +3,12 @@
 ;;;; Requires
 (require 'cl-lib) ; don't use cl.el (require 'helm)
 (require 'seq)
+(require 'pp)
 
 (require 'colle)
 (require 'glof)
 
 ;;;;; Local
-(require 'yplistener-class "helm-yplistener/yplistener-class")
 (require 'helm-yplistener-user-variable "helm-yplistener/helm-yplistener-user-variable")
 (require 'helm-yplistener-player "helm-yplistener/helm-yplistener-player")
 (require 'helm-yplistener-face "helm-yplistener/helm-yplistener-face")
@@ -38,7 +38,7 @@
 ;;;;; Bookmark Data
 (cl-defun helm-yplistener-bookmark-data-write (file data)
   (with-temp-file file (cl-letf ((standard-output (current-buffer)))
-                         (prin1 data))))
+                         (pp data))))
 
 (cl-defun helm-yplistener-bookmark-data-add (bookmark file)
   (if (file-exists-p file)
@@ -62,8 +62,8 @@
                    (helm-yplistener-bookmark-remove-if-name bookmark))))
     (if (helm-yplistener-bookmark-data-channel-exists-p bookmark file)
         (cl-locally (message "updating bookmark")
-          (helm-yplistener-bookmark-data-write file (seq-concatenate 'list new (list bookmark)))
-          (message (format "update to add %s" bookmark)))
+                    (helm-yplistener-bookmark-data-write file (seq-concatenate 'list new (list bookmark)))
+                    (message (format "update to add %s" bookmark)))
       (message "channel not found on bookmark"))))
 
 (cl-defun helm-yplistener-bookmark-data-remove (bookmark file)
@@ -189,9 +189,9 @@
   ((init  :initform #'helm-yplistener-bookmark-init)
    (candidates :initform 'helm-yplistener-candidate-bookmarks)
    (action :initform
-           (helm-make-actions
-            "Open channel" #'helm-yplistener-action-bookmark-open
-            "Remove bookmark" #'helm-yplistener-action-bookmark-remove))
+     (helm-make-actions
+      "Open channel" #'helm-yplistener-action-bookmark-open
+      "Remove bookmark" #'helm-yplistener-action-bookmark-remove))
    (migemo :initform t)))
 
 (defvar helm-source-yplistener-bookmarks
