@@ -29,7 +29,7 @@
                          (split-string x "<>"))))
      channels)))
 
-(cl-defun helm-yplistener-message (fmt &rest text)
+(cl-defun helm-yplistener-message (fmt . text)
   (apply #'message (format "[%s] %s"
                            (propertize "helm-yplistener"
                                        'face '(:foreground "#539b8f"))
@@ -40,7 +40,7 @@
   (pcase-let ((`(,yp ,name ,id ,tracker ,contact ,genre
                      ,desc ,listeners ,relays ,bitrate ,type ,_ ,_ ,_ ,_ ,_
                      ,uptime ,_ ,comment . ,_)
-                info))
+               info))
     (glof:plist
      :yp (helm-stringify yp)
      :name name
@@ -70,10 +70,10 @@
   (pcase lst
     (`nil str)
     (`((,target ,entity) . ,tail)
-      (cl-letf* ((rep-str (replace-regexp-in-string
-                           target entity str)))
-        (helm-yplistener-replace-html-entities-helper
-         tail rep-str)))))
+     (cl-letf* ((rep-str (replace-regexp-in-string
+                          target entity str)))
+       (helm-yplistener-replace-html-entities-helper
+        tail rep-str)))))
 
 (cl-defun helm-yplistener-url-retrieve (url)
   (helm-yplistener-message "get %s" url)
