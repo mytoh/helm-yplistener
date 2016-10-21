@@ -9,7 +9,6 @@
 (require 'glof)
 
 ;;;;; Local
-(require 'yplistener-class "helm-yplistener/yplistener-class")
 (require 'helm-yplistener-global "helm-yplistener/helm-yplistener-global")
 (require 'helm-yplistener-user-variable "helm-yplistener/helm-yplistener-user-variable")
 (require 'helm-yplistener-face "helm-yplistener/helm-yplistener-face")
@@ -130,10 +129,10 @@
   ((init :initform #'helm-yplistener-channel-init)
    (candidates :initform 'helm-yplistener-channel-candidate-channels)
    (action :initform
-           (helm-make-actions
-            "Open channel" #'helm-yplistener-action-channel-open
-            "Add to bookmarks" #'helm-yplistener-action-bookmark-add
-            "Copy contact url" #'helm-yplistener-action-channel-copy-conctact-url))
+     (helm-make-actions
+      "Open channel" #'helm-yplistener-action-channel-open
+      "Add to bookmarks" #'helm-yplistener-action-bookmark-add
+      "Copy contact url" #'helm-yplistener-action-channel-copy-conctact-url))
    (migemo :initform t)))
 
 (defvar helm-source-yplistener-channels
