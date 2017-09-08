@@ -84,9 +84,9 @@
       (helm-html-decode-entities-string res))))
 
 (cl-defun helm-yplistener-get-channel (info)
-  (if-let ((res (thread-first (cadr info)
-                  helm-yplistener-make-yp-index-url
-                  helm-yplistener-url-retrieve)))
+  (if-let* ((res (thread-first (cadr info)
+                   helm-yplistener-make-yp-index-url
+                   helm-yplistener-url-retrieve)))
       (list (car info) res)
     nil))
 
@@ -106,9 +106,13 @@
     (helm-yplistener-string->utf-8 content)))
 
 (cl-defun helm-yplistener-empty-response-p (str)
-  (if (stringp str)
-      (string-match-p "^\n$" str)
-    nil))
+  (pcase str
+    ((and (pred stringp)
+        (rx line-start
+            (char "\n")
+            line-end))
+     t)
+    (_ nil)))
 
 (cl-defun helm-yplistener-string->utf-8 (str)
   (decode-coding-string str 'utf-8-unix))

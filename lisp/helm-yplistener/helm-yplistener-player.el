@@ -35,7 +35,13 @@
   (message url)
   (cl-letf ((command (seq-concatenate 'string
                                       "mpv "
-                                      " --ytdl=no "
+                                      (pcase url
+                                        ((rx "twitch") 
+                                         " --ytdl=yes --ytdl-format=Low ")
+                                        (_ "--ytdl=no"))
+                                      " --speed 1 --loop=inf "
+                                      " --force-window=immediate "
+                                      " --no-cache "
                                       ;; " -{ av://lavfi:color -length 1 -} "
                                       "'" url "'"
                                       " &")))

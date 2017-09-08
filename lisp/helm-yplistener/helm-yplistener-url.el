@@ -7,47 +7,46 @@
 (cl-defun helm-yplistener-make-url (thing)
   (pcase thing
     (`[:bookmark ,b]
-      (helm-yplistener-make-url-bookmark b))
+     (helm-yplistener-make-url-bookmark b))
     (`[:channel ,c]
-      (helm-yplistener-make-url-channel c))))
+     (helm-yplistener-make-url-channel c))))
 
 
 (cl-defun helm-yplistener-make-url-channel (channel)
   (glof:let (((id :id)
-              (tracker :tracker)
-              (type :type))
-             channel)
-    (format "%s://%s:%s/stream/%s.%s?tip=%s"
-            (if (string-match-p (rx (or "flv"
-                                       "FLV"
-                                       "mkv"
-                                       "MKV"))
-                                type)
-                "http"
-              helm-yplistener-default-protocol)
-            (glof:get helm-yplistener-local-address
-                      :host)
-            (glof:get helm-yplistener-local-address
-                      :port)
-            id type tracker)))
+            (tracker :tracker)
+            (type :type))
+           channel)
+    (pcase (downcase type)
+      ("web" (string-trim (glof:get channel :contact)))
+      (_
+       (format "%s://%s:%s/stream/%s.%s?tip=%s"
+               (pcase (downcase type)
+                 ((rx (or "flv" "mkv"))
+                  "http")
+                 (_
+                  helm-yplistener-default-protocol))
+               (glof:get helm-yplistener-local-address
+                       :host)
+               (glof:get helm-yplistener-local-address
+                       :port)
+               id type tracker)))))
 
 (cl-defun helm-yplistener-make-url-bookmark (bkm)
   (glof:let (((id :id)
-              (tracker :tracker)
-              (type :type))
-             bkm)
+            (tracker :tracker)
+            (type :type))
+           bkm)
     (format "%s://%s:%s/stream/%s.%s?tip=%s"
-            (if (string-match-p (rx (or "flv"
-                                       "FLV"
-                                       "MKV"
-                                       "mkv"))
-                                type)
-                "http"
-              helm-yplistener-default-protocol)
+            (pcase (downcase type)
+              ((rx (or "flv" "mkv"))
+               
+               "http")
+              (_ helm-yplistener-default-protocol))
             (glof:get helm-yplistener-local-address
-                      :host)
+                    :host)
             (glof:get helm-yplistener-local-address
-                      :port)
+                    :port)
             id type tracker)))
 
 (provide 'helm-yplistener-url)
