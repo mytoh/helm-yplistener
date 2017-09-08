@@ -14,7 +14,7 @@
   (cl-letf ((command (seq-concatenate 'string
                                       "mplayer "
                                       "'" url "'"
-                                      " -softvol -nocache -really-quiet -noconsolecontrols "
+                                      " -softvol -softvol-max 300 -volume 40 -loop 0 -autosync 1 -nocache -really-quiet -noconsolecontrols "
                                       " &")))
     (message command)
     (start-process-shell-command "yplistener" nil command)))
